@@ -14,7 +14,7 @@
 
 | 主畫面 | Widget 小工具 | 即時動態 |
 |:---:|:---:|:---:|
-| *(在此插入主畫面截圖)* | *(在此插入 Widget 截圖)* | *(在此插入 Live Activity 截圖)* |
+| <img src="image/IMG_2075.jpg" width="250"> | <img src="image/IMG_2076.PNG" width="250"> | <img src="image/IMG_2077.jpg" width="250"> |
 
 ## 🛠️ 使用技術
 

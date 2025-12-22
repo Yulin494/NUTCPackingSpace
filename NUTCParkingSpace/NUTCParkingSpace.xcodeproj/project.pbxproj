@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8EBC8CA92EF9084300407A3C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBC8CA82EF9084300407A3C /* WidgetKit.framework */; };
+		8EBC8CAB2EF9084400407A3C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBC8CAA2EF9084300407A3C /* SwiftUI.framework */; };
+		8EBC8CBA2EF9084700407A3C /* ParkingWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		88D9FDD52EF8194900D96BDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,18 +27,70 @@
 			remoteGlobalIDString = 88D9FDC12EF8194800D96BDF;
 			remoteInfo = NUTCParkingSpace;
 		};
+		8EBC8CB82EF9084700407A3C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88D9FDBA2EF8194800D96BDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8EBC8CA52EF9084200407A3C;
+			remoteInfo = ParkingWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8EBC8CBF2EF9084700407A3C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8EBC8CBA2EF9084700407A3C /* ParkingWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUTCParkingSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUTCParkingSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUTCParkingSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		88EDF1BE2EF8FC2B00578BDE /* SimulateEntry.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = SimulateEntry.gpx; path = ../SimulateEntry.gpx; sourceTree = "<group>"; };
+		8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParkingWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EBC8CA82EF9084300407A3C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		8EBC8CAA2EF9084300407A3C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8EBC8CBB2EF9084700407A3C /* Exceptions for "ParkingWidget" folder in "ParkingWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */;
+		};
+		8EBC8CC22EF9088700407A3C /* Exceptions for "NUTCParkingSpace" folder in "ParkingWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Features/Parking/Models/ParkingLot.swift,
+				Features/Parking/Services/ParkingDataService.swift,
+			);
+			target = 8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */;
+		};
+		8EBC8CC82EF90DE400407A3C /* Exceptions for "ParkingWidget" folder in "NUTCParkingSpace" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				RefreshIntent.swift,
+			);
+			target = 88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8EBC8CC22EF9088700407A3C /* Exceptions for "NUTCParkingSpace" folder in "ParkingWidgetExtension" target */,
+			);
 			path = NUTCParkingSpace;
 			sourceTree = "<group>";
 		};
@@ -44,6 +102,15 @@
 		88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = NUTCParkingSpaceUITests;
+			sourceTree = "<group>";
+		};
+		8EBC8CAC2EF9084400407A3C /* ParkingWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8EBC8CC82EF90DE400407A3C /* Exceptions for "ParkingWidget" folder in "NUTCParkingSpace" target */,
+				8EBC8CBB2EF9084700407A3C /* Exceptions for "ParkingWidget" folder in "ParkingWidgetExtension" target */,
+			);
+			path = ParkingWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -70,6 +137,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8EBC8CA32EF9084200407A3C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8EBC8CAB2EF9084400407A3C /* SwiftUI.framework in Frameworks */,
+				8EBC8CA92EF9084300407A3C /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -80,6 +156,8 @@
 				88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */,
 				88D9FDD72EF8194900D96BDF /* NUTCParkingSpaceTests */,
 				88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */,
+				8EBC8CAC2EF9084400407A3C /* ParkingWidget */,
+				8EBC8CA72EF9084300407A3C /* Frameworks */,
 				88D9FDC32EF8194800D96BDF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,8 +168,18 @@
 				88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */,
 				88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */,
 				88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */,
+				8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8EBC8CA72EF9084300407A3C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8EBC8CA82EF9084300407A3C /* WidgetKit.framework */,
+				8EBC8CAA2EF9084300407A3C /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -104,10 +192,12 @@
 				88D9FDBE2EF8194800D96BDF /* Sources */,
 				88D9FDBF2EF8194800D96BDF /* Frameworks */,
 				88D9FDC02EF8194800D96BDF /* Resources */,
+				8EBC8CBF2EF9084700407A3C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8EBC8CB92EF9084700407A3C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */,
@@ -165,6 +255,28 @@
 			productReference = 88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8EBC8CBC2EF9084700407A3C /* Build configuration list for PBXNativeTarget "ParkingWidgetExtension" */;
+			buildPhases = (
+				8EBC8CA22EF9084200407A3C /* Sources */,
+				8EBC8CA32EF9084200407A3C /* Frameworks */,
+				8EBC8CA42EF9084200407A3C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8EBC8CAC2EF9084400407A3C /* ParkingWidget */,
+			);
+			name = ParkingWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = ParkingWidgetExtension;
+			productReference = 8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -172,7 +284,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					88D9FDC12EF8194800D96BDF = {
@@ -190,6 +302,9 @@
 					88D9FDDD2EF8194900D96BDF = {
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 88D9FDC12EF8194800D96BDF;
+					};
+					8EBC8CA52EF9084200407A3C = {
+						CreatedOnToolsVersion = 26.0;
 					};
 				};
 			};
@@ -210,6 +325,7 @@
 				88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */,
 				88D9FDD32EF8194900D96BDF /* NUTCParkingSpaceTests */,
 				88D9FDDD2EF8194900D96BDF /* NUTCParkingSpaceUITests */,
+				8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -230,6 +346,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		88D9FDDC2EF8194900D96BDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8EBC8CA42EF9084200407A3C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -260,6 +383,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8EBC8CA22EF9084200407A3C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -272,6 +402,11 @@
 			isa = PBXTargetDependency;
 			target = 88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */;
 			targetProxy = 88D9FDDF2EF8194900D96BDF /* PBXContainerItemProxy */;
+		};
+		8EBC8CB92EF9084700407A3C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */;
+			targetProxy = 8EBC8CB82EF9084700407A3C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -527,6 +662,68 @@
 			};
 			name = Release;
 		};
+		8EBC8CBD2EF9084700407A3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ParkingWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.ParkingWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8EBC8CBE2EF9084700407A3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ParkingWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.ParkingWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -562,6 +759,15 @@
 			buildConfigurations = (
 				88D9FDEF2EF8194900D96BDF /* Debug */,
 				88D9FDF02EF8194900D96BDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8EBC8CBC2EF9084700407A3C /* Build configuration list for PBXNativeTarget "ParkingWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8EBC8CBD2EF9084700407A3C /* Debug */,
+				8EBC8CBE2EF9084700407A3C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import Combine
 
 class ParkingDataService: ObservableObject {
     static let shared = ParkingDataService()

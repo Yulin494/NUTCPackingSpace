@@ -1,50 +1,45 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version Change: 0.0.0 -> 1.0.0
+- Modified Principles:
+  - Added: Language First (語言優先)
+  - Added: Modern iOS Stack (現代 iOS 技術棧)
+  - Added: Architecture (架構模式)
+  - Added: User Value (用戶價值)
+- Added Sections: Technical Constraints, Development Workflow
+- Removed Sections: None
+- Templates Requiring Updates: None
+-->
+# NUTCParkingSpace Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Language First (語言優先)
+App 介面與所有文件（包括程式碼註解、提交訊息、規格書）必須使用 **繁體中文 (Traditional Chinese)**。這確保了目標用戶與開發團隊的溝通無礙。
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Modern iOS Stack (現代 iOS 技術棧)
+開發必須使用 **Swift** 語言與 **SwiftUI** 框架。禁止使用 Objective-C 或 UIKit（除非遇到 SwiftUI 無法實現的特定 API 限制，且需經過審核）。
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Architecture (架構模式)
+程式碼必須遵循 **MVVM (Model-View-ViewModel)** 架構模式。程式碼需高度模組化，確保業務邏輯與 UI 分離，以提升可維護性與可測試性。
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. User Value (用戶價值)
+核心價值在於提供 **準確的車位查詢** 與 **即時的剩餘車位推播**。這些功能必須被優先實作並經過嚴格測試，確保資料的即時性與準確性。
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+## Technical Constraints
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- **Target Platform**: iOS 15.0+
+- **Device Support**: iPhone (Portrait mode primarily)
+- **Network**: Must handle offline/poor network states gracefully.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Development Workflow
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- **Branching**: Feature branches (`feat/name`) merged into `main` via PR.
+- **Commits**: Conventional Commits format in Traditional Chinese (e.g., `feat: 新增車位列表頁面`).
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+本憲章為專案最高指導原則。任何修改需經由 Pull Request 提出，並更新版本號。
+所有 PR 審查必須驗證是否符合上述原則。
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-12-21 | **Last Amended**: 2025-12-21

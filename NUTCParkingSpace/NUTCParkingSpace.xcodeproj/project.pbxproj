@@ -1,0 +1,570 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		88D9FDD52EF8194900D96BDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88D9FDBA2EF8194800D96BDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 88D9FDC12EF8194800D96BDF;
+			remoteInfo = NUTCParkingSpace;
+		};
+		88D9FDDF2EF8194900D96BDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88D9FDBA2EF8194800D96BDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 88D9FDC12EF8194800D96BDF;
+			remoteInfo = NUTCParkingSpace;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUTCParkingSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUTCParkingSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUTCParkingSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NUTCParkingSpace;
+			sourceTree = "<group>";
+		};
+		88D9FDD72EF8194900D96BDF /* NUTCParkingSpaceTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NUTCParkingSpaceTests;
+			sourceTree = "<group>";
+		};
+		88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NUTCParkingSpaceUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		88D9FDBF2EF8194800D96BDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D9FDD12EF8194900D96BDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D9FDDB2EF8194900D96BDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		88D9FDB92EF8194800D96BDF = {
+			isa = PBXGroup;
+			children = (
+				88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */,
+				88D9FDD72EF8194900D96BDF /* NUTCParkingSpaceTests */,
+				88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */,
+				88D9FDC32EF8194800D96BDF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		88D9FDC32EF8194800D96BDF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */,
+				88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */,
+				88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88D9FDE82EF8194900D96BDF /* Build configuration list for PBXNativeTarget "NUTCParkingSpace" */;
+			buildPhases = (
+				88D9FDBE2EF8194800D96BDF /* Sources */,
+				88D9FDBF2EF8194800D96BDF /* Frameworks */,
+				88D9FDC02EF8194800D96BDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */,
+			);
+			name = NUTCParkingSpace;
+			packageProductDependencies = (
+			);
+			productName = NUTCParkingSpace;
+			productReference = 88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */;
+			productType = "com.apple.product-type.application";
+		};
+		88D9FDD32EF8194900D96BDF /* NUTCParkingSpaceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88D9FDEB2EF8194900D96BDF /* Build configuration list for PBXNativeTarget "NUTCParkingSpaceTests" */;
+			buildPhases = (
+				88D9FDD02EF8194900D96BDF /* Sources */,
+				88D9FDD12EF8194900D96BDF /* Frameworks */,
+				88D9FDD22EF8194900D96BDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				88D9FDD62EF8194900D96BDF /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				88D9FDD72EF8194900D96BDF /* NUTCParkingSpaceTests */,
+			);
+			name = NUTCParkingSpaceTests;
+			packageProductDependencies = (
+			);
+			productName = NUTCParkingSpaceTests;
+			productReference = 88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		88D9FDDD2EF8194900D96BDF /* NUTCParkingSpaceUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88D9FDEE2EF8194900D96BDF /* Build configuration list for PBXNativeTarget "NUTCParkingSpaceUITests" */;
+			buildPhases = (
+				88D9FDDA2EF8194900D96BDF /* Sources */,
+				88D9FDDB2EF8194900D96BDF /* Frameworks */,
+				88D9FDDC2EF8194900D96BDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				88D9FDE02EF8194900D96BDF /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */,
+			);
+			name = NUTCParkingSpaceUITests;
+			packageProductDependencies = (
+			);
+			productName = NUTCParkingSpaceUITests;
+			productReference = 88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		88D9FDBA2EF8194800D96BDF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					88D9FDC12EF8194800D96BDF = {
+						CreatedOnToolsVersion = 16.2;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+					88D9FDD32EF8194900D96BDF = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 88D9FDC12EF8194800D96BDF;
+					};
+					88D9FDDD2EF8194900D96BDF = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 88D9FDC12EF8194800D96BDF;
+					};
+				};
+			};
+			buildConfigurationList = 88D9FDBD2EF8194800D96BDF /* Build configuration list for PBXProject "NUTCParkingSpace" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 88D9FDB92EF8194800D96BDF;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 88D9FDC32EF8194800D96BDF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */,
+				88D9FDD32EF8194900D96BDF /* NUTCParkingSpaceTests */,
+				88D9FDDD2EF8194900D96BDF /* NUTCParkingSpaceUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		88D9FDC02EF8194800D96BDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D9FDD22EF8194900D96BDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D9FDDC2EF8194900D96BDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		88D9FDBE2EF8194800D96BDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D9FDD02EF8194900D96BDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D9FDDA2EF8194900D96BDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		88D9FDD62EF8194900D96BDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */;
+			targetProxy = 88D9FDD52EF8194900D96BDF /* PBXContainerItemProxy */;
+		};
+		88D9FDE02EF8194900D96BDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */;
+			targetProxy = 88D9FDDF2EF8194900D96BDF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		88D9FDE62EF8194900D96BDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		88D9FDE72EF8194900D96BDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		88D9FDE92EF8194900D96BDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NUTCParkingSpace/Preview Content\"";
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_FILE = Info-Manual.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		88D9FDEA2EF8194900D96BDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NUTCParkingSpace/Preview Content\"";
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_FILE = Info-Manual.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		88D9FDEC2EF8194900D96BDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpaceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NUTCParkingSpace.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NUTCParkingSpace";
+			};
+			name = Debug;
+		};
+		88D9FDED2EF8194900D96BDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpaceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NUTCParkingSpace.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NUTCParkingSpace";
+			};
+			name = Release;
+		};
+		88D9FDEF2EF8194900D96BDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpaceUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NUTCParkingSpace;
+			};
+			name = Debug;
+		};
+		88D9FDF02EF8194900D96BDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpaceUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NUTCParkingSpace;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		88D9FDBD2EF8194800D96BDF /* Build configuration list for PBXProject "NUTCParkingSpace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88D9FDE62EF8194900D96BDF /* Debug */,
+				88D9FDE72EF8194900D96BDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88D9FDE82EF8194900D96BDF /* Build configuration list for PBXNativeTarget "NUTCParkingSpace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88D9FDE92EF8194900D96BDF /* Debug */,
+				88D9FDEA2EF8194900D96BDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88D9FDEB2EF8194900D96BDF /* Build configuration list for PBXNativeTarget "NUTCParkingSpaceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88D9FDEC2EF8194900D96BDF /* Debug */,
+				88D9FDED2EF8194900D96BDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88D9FDEE2EF8194900D96BDF /* Build configuration list for PBXNativeTarget "NUTCParkingSpaceUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88D9FDEF2EF8194900D96BDF /* Debug */,
+				88D9FDF02EF8194900D96BDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 88D9FDBA2EF8194800D96BDF /* Project object */;
+}

@@ -7,7 +7,7 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
     
     private let locationManager = CLLocationManager()
     private let campusCenter = CLLocationCoordinate2D(latitude: 24.149691, longitude: 120.683974)
-    private let regionRadius: CLLocationDistance = 500.0
+    private let regionRadius: CLLocationDistance = 1000.0
     private let regionIdentifier = "CampusCenterRegion"
     
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
@@ -77,11 +77,13 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         let content = UNMutableNotificationContent()
         content.title = "附近機車停車位資訊"
         
-        let availableLots = lots.filter { $0.availableCount > 0 }
+        // Filter for motorcycle lots only
+        let availableLots = lots.filter { $0.type == .motorcycle && $0.availableCount > 0 }
+        
         if availableLots.isEmpty {
-            content.body = "目前所有停車場皆已滿位。"
+            content.body = "目前所有機車停車場皆已滿位。"
         } else {
-            let summary = availableLots.prefix(3).map { "\($0.name): \($0.availableCount)" }.joined(separator: ", ")
+            let summary = availableLots.prefix(4).map { "\($0.name): \($0.availableCount)" }.joined(separator: ", ")
             content.body = summary
         }
         

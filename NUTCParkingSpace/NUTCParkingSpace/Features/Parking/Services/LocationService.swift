@@ -14,14 +14,14 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     
     private var lastNotificationTime: Date?
-    private let coolDownInterval: TimeInterval = 600 // 10 minutes
+    private let coolDownInterval: TimeInterval = 600 // 10 分鐘冷卻時間
     
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
-        // Enable background location updates
+        // 啟用背景位置更新
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
         
@@ -36,10 +36,10 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
     func requestPermissions() {
         locationManager.requestAlwaysAuthorization()
         
-        // Also request notification permissions
+        // 同時請求通知權限
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
-                print("Notification permission error: \(error)")
+                print("通知權限錯誤: \(error)")
             }
         }
     }
@@ -68,24 +68,24 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
     }
     
     private func checkAndNotify() {
-        // Check cool-down
+        // 檢查冷卻時間
         if let lastTime = lastNotificationTime, Date().timeIntervalSince(lastTime) < coolDownInterval {
             return
         }
         
-        // Request background execution time to ensure data fetch completes
+        // 請求背景執行時間以確保資料抓取完成
         var bgTaskID: UIBackgroundTaskIdentifier = .invalid
         bgTaskID = UIApplication.shared.beginBackgroundTask(withName: "FetchParkingData") {
-            // End the task if time expires
+            // 如果時間耗盡則結束任務
             UIApplication.shared.endBackgroundTask(bgTaskID)
             bgTaskID = .invalid
         }
         
-        // Fetch data
+        // 抓取資料
         ParkingDataService.shared.fetchParkingData { [weak self] lots in
             self?.sendNotification(lots: lots)
             
-            // End the task when done
+            // 完成後結束任務
             if bgTaskID != .invalid {
                 UIApplication.shared.endBackgroundTask(bgTaskID)
                 bgTaskID = .invalid
@@ -103,7 +103,7 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         let content = UNMutableNotificationContent()
         content.title = "附近機車停車位資訊"
         
-        // Filter for motorcycle lots only
+        // 只過濾機車停車場
         let availableLots = lots.filter { $0.type == .motorcycle && $0.availableCount > 0 }
         
         if availableLots.isEmpty {

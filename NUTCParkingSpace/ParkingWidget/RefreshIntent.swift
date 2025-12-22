@@ -14,7 +14,7 @@ struct RefreshIntent: AppIntent {
     init() {}
 
     func perform() async throws -> some IntentResult {
-        // 使用 WidgetCenter 重新載入所有 Widget 的 Timeline
+        // 使用 WidgetCenter 重新載入所有 Widget 的時間軸 (Timeline)
         // 這會觸發 TimelineProvider 的 getTimeline 方法
         WidgetCenter.shared.reloadAllTimelines()
         

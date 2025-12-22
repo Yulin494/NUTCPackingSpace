@@ -11,7 +11,7 @@ class ParkingDataService: ObservableObject {
     
     private let urlString = "https://apps.nutc.edu.tw/getParking/showParkingData.php"
     
-    // Using the campus center for all lots as per spec clarification
+    // 根據規格說明，統一使用校園中心座標
     private let campusCenter = CLLocationCoordinate2D(latitude: 24.149691, longitude: 120.683974)
     
     func fetchParkingData(completion: (([ParkingLot]) -> Void)? = nil) {
@@ -22,7 +22,7 @@ class ParkingDataService: ObservableObject {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.timeoutInterval = 60 // 增加超時時間
+        request.timeoutInterval = 60 // 增加逾時時間
         
         // 模擬完整的瀏覽器 Headers
         request.addValue("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", forHTTPHeaderField: "Accept")
@@ -41,7 +41,7 @@ class ParkingDataService: ObservableObject {
                 self?.isLoading = false
                 
                 if let error = error {
-                    print("ParkingDataService Error: \(error.localizedDescription)")
+                    print("ParkingDataService 錯誤: \(error.localizedDescription)")
                     self?.errorMessage = "連線失敗: \(error.localizedDescription)"
                     completion?(self?.parkingLots ?? [])
                     return
@@ -110,7 +110,7 @@ class ParkingDataService: ObservableObject {
                 let matches = tdRegex.matches(in: sectionContent, options: [], range: NSRange(location: 0, length: nsString.length))
                 
                 var currentName: String?
-                var lastCount: Int?
+                var currentValues: [Int] = []
                 
                 for match in matches {
                     // Group 1: tag (td/th) - ignored
@@ -121,12 +121,16 @@ class ParkingDataService: ObservableObject {
                     
                     if classString.contains("partHead") {
                         // 如果已經有正在處理的停車場，且有找到數值，則儲存它
-                        if let name = currentName, let count = lastCount {
-                            // 排除 "停車場" 這種標題列 (它通常沒有數值，但如果誤判了數值，這裡可以過濾名稱)
+                        if let name = currentName, let available = currentValues.last {
+                            // 排除 "停車場" 這種標題列
                             if !name.isEmpty && name != "停車場" {
+                                // 假設有兩個數值，第一個是總數；若只有一個，則總數=剩餘 (或設為0表示未知)
+                                let total = currentValues.count >= 2 ? currentValues.first! : 0
+                                
                                 let lot = ParkingLot(
                                     name: name,
-                                    availableCount: count,
+                                    totalCapacity: total,
+                                    availableCount: available,
                                     coordinate: self.campusCenter,
                                     lastUpdated: Date(),
                                     type: type
@@ -137,23 +141,24 @@ class ParkingDataService: ObservableObject {
                         
                         // 開始處理新的停車場
                         currentName = cleanString(contentString)
-                        lastCount = nil // 重置數值
+                        currentValues = [] // 重置數值
                         
                     } else if (classString.contains("partAll") || classString.contains("partMotoAll")) {
-                        // 嘗試解析數值，更新 lastCount
-                        // 根據網頁結構，剩餘車位數總是該區塊中的最後一個數值
+                        // 解析數值並加入列表
                         if let val = cleanInt(contentString) {
-                            lastCount = val
+                            currentValues.append(val)
                         }
                     }
                 }
                 
                 // 處理最後一個停車場
-                if let name = currentName, let count = lastCount {
+                if let name = currentName, let available = currentValues.last {
                     if !name.isEmpty && name != "停車場" {
+                        let total = currentValues.count >= 2 ? currentValues.first! : 0
                         let lot = ParkingLot(
                             name: name,
-                            availableCount: count,
+                            totalCapacity: total,
+                            availableCount: available,
                             coordinate: self.campusCenter,
                             lastUpdated: Date(),
                             type: type
@@ -186,14 +191,14 @@ class ParkingDataService: ObservableObject {
     }
     
     private func cleanString(_ input: String) -> String {
-        // 1. Remove HTML tags
+        // 1. 移除 HTML 標籤
         var text = input.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
         
-        // 2. Remove content in parentheses (e.g., "(開放訪客)")
+        // 2. 移除括弧內容 (例如 "(開放訪客)")
         text = text.replacingOccurrences(of: "\\(.*?\\)", with: "", options: .regularExpression, range: nil)
         text = text.replacingOccurrences(of: "（.*?）", with: "", options: .regularExpression, range: nil)
         
-        // 3. Trim whitespace
+        // 3. 去除前後空白
         return text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     

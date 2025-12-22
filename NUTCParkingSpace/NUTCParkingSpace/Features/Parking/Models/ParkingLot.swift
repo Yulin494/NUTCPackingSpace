@@ -9,12 +9,13 @@ enum ParkingType: String, CaseIterable {
 struct ParkingLot: Identifiable, Equatable {
     let id = UUID()
     let name: String
+    let totalCapacity: Int
     let availableCount: Int
     let coordinate: CLLocationCoordinate2D
     let lastUpdated: Date
     let type: ParkingType
     
-    // Equatable implementation for coordinate comparison
+    // 實作 Equatable 用於座標比較
     static func == (lhs: ParkingLot, rhs: ParkingLot) -> Bool {
         return lhs.id == rhs.id &&
                lhs.name == rhs.name &&

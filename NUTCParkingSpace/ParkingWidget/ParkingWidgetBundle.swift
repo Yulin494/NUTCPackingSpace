@@ -12,5 +12,6 @@ import SwiftUI
 struct ParkingWidgetBundle: WidgetBundle {
     var body: some Widget {
         ParkingWidget()
+        ParkingLiveActivity()
     }
 }

@@ -1,80 +1,132 @@
-//
-//  ParkingWidgetLiveActivity.swift
-//  ParkingWidget
-//
-//  Created by imac-3700 on 2025/12/22.
-//
 
 import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct ParkingWidgetAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
-    }
-
-    // Fixed non-changing properties about your activity go here!
-    var name: String
-}
-
-struct ParkingWidgetLiveActivity: Widget {
+struct ParkingLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: ParkingWidgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
-            }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
+        ActivityConfiguration(for: ParkingAttributes.self) { context in
+            // 鎖定畫面 / 橫幅 UI
+            ParkingLiveActivityLockScreenView(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
+                // 動態島展開區域 UI
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Image(systemName: "motorcycle.fill")
+                        .font(.title2)
+                        .foregroundColor(.cyan)
+                        .padding(.leading)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Text("\(context.state.availableCount)")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.trailing)
                 }
+                DynamicIslandExpandedRegion(.center) {
+                    Text(context.attributes.parkingName)
+                        .font(.caption)
+                        .lineLimit(1)
+                }   
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    Text("最後更新: \(context.state.lastUpdated.formatted(date: .omitted, time: .shortened))")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.bottom)
                 }
             } compactLeading: {
-                Text("L")
+                Image(systemName: "bicycle")
+                    .foregroundStyle(.cyan)
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text("\(context.state.availableCount)")
+                    .fontWeight(.bold)
+                    .foregroundStyle(context.state.availableCount > 0 ? .green : .red)
             } minimal: {
-                Text(context.state.emoji)
+                Text("\(context.state.availableCount)")
+                    .font(.caption2)
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
         }
     }
 }
 
-extension ParkingWidgetAttributes {
-    fileprivate static var preview: ParkingWidgetAttributes {
-        ParkingWidgetAttributes(name: "World")
+struct ParkingLiveActivityLockScreenView: View {
+    let context: ActivityViewContext<ParkingAttributes>
+    @Environment(\.colorScheme) var colorScheme
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(context.attributes.parkingName)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    
+                    Text("最後更新: \(context.state.lastUpdated.formatted(date: .omitted, time: .shortened))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                
+                Spacer()
+                
+                Text("\(context.state.availableCount)")
+                    .font(.system(size: 60, weight: .heavy))
+                    .foregroundStyle(context.state.availableCount > 0 ? Color.green : Color.red)
+            }
+            
+            
+            // 滿載率與時間底部資訊
+            OccupancyBarView(
+                available: context.state.availableCount,
+                total: context.state.totalCapacity,
+                lastUpdated: context.state.lastUpdated
+            )
+        }
+        .padding()
+        .activityBackgroundTint(Color(UIColor.systemBackground))
+        .activitySystemActionForegroundColor(Color.primary)
     }
 }
 
-extension ParkingWidgetAttributes.ContentState {
-    fileprivate static var smiley: ParkingWidgetAttributes.ContentState {
-        ParkingWidgetAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: ParkingWidgetAttributes.ContentState {
-         ParkingWidgetAttributes.ContentState(emoji: "🤩")
-     }
-}
-
-#Preview("Notification", as: .content, using: ParkingWidgetAttributes.preview) {
-   ParkingWidgetLiveActivity()
-} contentStates: {
-    ParkingWidgetAttributes.ContentState.smiley
-    ParkingWidgetAttributes.ContentState.starEyes
+private struct OccupancyBarView: View {
+    let available: Int
+    let total: Int
+    let lastUpdated: Date
+    
+    var occupancyRate: Double {
+        guard total > 0 else { return 0 }
+        return 1.0 - (Double(available) / Double(total))
+    }
+    
+    var barColor: Color {
+        if occupancyRate > 0.9 { return .red }
+        if occupancyRate > 0.7 { return .orange }
+        return .green
+    }
+    
+    var body: some View {
+        VStack(spacing: 6) {
+            // 進度條
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.secondary.opacity(0.2))
+                    
+                    Capsule()
+                        .fill(barColor)
+                        .frame(width: geometry.size.width * CGFloat(occupancyRate))
+                        .animation(.spring, value: occupancyRate)
+                }
+            }
+            .frame(height: 12)
+            
+            // 標籤
+            HStack {
+                Spacer()
+                
+                Text("滿載率: \(Int(occupancyRate * 100))% ・ \(lastUpdated, style: .relative)前更新")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
 }

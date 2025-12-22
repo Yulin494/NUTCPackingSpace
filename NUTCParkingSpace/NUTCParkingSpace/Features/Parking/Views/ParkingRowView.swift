@@ -25,5 +25,12 @@ struct ParkingRowView: View {
             }
         }
         .padding(.vertical, 4)
+        .contextMenu {
+            Button {
+                CommuteManager.shared.startCommuting(for: parkingLot)
+            } label: {
+                Label("開始通勤監控", systemImage: "bicycle")
+            }
+        }
     }
 }

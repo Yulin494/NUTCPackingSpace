@@ -23,8 +23,9 @@ struct ParkingWidgetControl: ControlWidget {
                 Label(isRunning ? "On" : "Off", systemImage: "timer")
             }
         }
-        .displayName("Timer")
-        .description("A an example control that runs a timer.")
+
+        .displayName("計時器")
+        .description("一個顯示如何執行計時器的範例控制項。")
     }
 }
 
@@ -35,7 +36,7 @@ extension ParkingWidgetControl {
         }
 
         func currentValue() async throws -> Bool {
-            let isRunning = true // Check if the timer is running
+            let isRunning = true // 檢查計時器是否正在執行
             return isRunning
         }
     }
@@ -48,7 +49,7 @@ struct StartTimerIntent: SetValueIntent {
     var value: Bool
 
     func perform() async throws -> some IntentResult {
-        // Start / stop the timer based on `value`.
+        // 根據 `value` 啟動/停止計時器
         return .result()
     }
 }

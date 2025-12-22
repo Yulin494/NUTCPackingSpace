@@ -3,14 +3,14 @@ import SwiftUI
 import AppIntents
 import CoreLocation
 
-// MARK: - Timeline Entry
+// MARK: - 時間軸項目 (Timeline Entry)
 struct ParkingEntry: TimelineEntry {
     let date: Date
     let parkingLots: [ParkingLot]
     let error: String?
 }
 
-// MARK: - Timeline Provider
+// MARK: - 時間軸提供者 (Timeline Provider)
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> ParkingEntry {
         ParkingEntry(date: Date(), parkingLots: placeholderLots(), error: nil)
@@ -53,15 +53,15 @@ struct Provider: TimelineProvider {
     // 預覽用的假資料
     private func placeholderLots() -> [ParkingLot] {
         return [
-            ParkingLot(name: "中技 B3", availableCount: 120, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
-            ParkingLot(name: "中商 B2", availableCount: 45, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
-            ParkingLot(name: "民生校區", availableCount: 0, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
-            ParkingLot(name: "操場地下", availableCount: 88, coordinate: .init(), lastUpdated: Date(), type: .motorcycle)
+            ParkingLot(name: "中技 B3", totalCapacity: 200, availableCount: 120, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
+            ParkingLot(name: "中商 B2", totalCapacity: 300, availableCount: 45, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
+            ParkingLot(name: "民生校區", totalCapacity: 100, availableCount: 0, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
+            ParkingLot(name: "操場地下", totalCapacity: 150, availableCount: 88, coordinate: .init(), lastUpdated: Date(), type: .motorcycle)
         ]
     }
 }
 
-// MARK: - Widget View
+// MARK: - 小工具視圖 (Widget View)
 struct ParkingWidgetEntryView: View {
     var entry: Provider.Entry
     
@@ -106,14 +106,14 @@ struct ParkingWidgetEntryView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .foregroundStyle(.gray)
                 } else {
-                    // Manual Grid Layout using VStack/HStack for perfect vertical fill
+                    // 使用 VStack/HStack 進行手動網格佈局，以完美填滿垂直空間
                     let displayLots = Array(entry.parkingLots.prefix(4))
                     // 分割成上下兩列
                     let topRow = Array(displayLots.prefix(2))
                     let bottomRow = Array(displayLots.dropFirst(2).prefix(2))
                     
                     VStack(spacing: 6) {
-                        // Top Row
+                        // 上排
                         HStack(spacing: 6) {
                             ForEach(topRow) { lot in
                                 ParkingCell(lot: lot)
@@ -123,7 +123,7 @@ struct ParkingWidgetEntryView: View {
                         }
                         .frame(maxHeight: .infinity)
                         
-                        // Bottom Row
+                        // 下排
                         HStack(spacing: 6) {
                             ForEach(bottomRow) { lot in
                                 ParkingCell(lot: lot)
@@ -181,7 +181,7 @@ struct ParkingCell: View {
     }
 }
 
-// MARK: - Widget Configuration
+// MARK: - 小工具設定 (Widget Configuration)
 struct ParkingWidget: Widget {
     let kind: String = "ParkingWidget"
 
@@ -195,17 +195,17 @@ struct ParkingWidget: Widget {
     }
 }
 
-// MARK: - Preview
+// MARK: - 預覽 (Preview)
 #Preview(as: .systemSmall) {
     ParkingWidget()
 } timeline: {
     ParkingEntry(
         date: Date(),
         parkingLots: [
-            ParkingLot(name: "中技 B3", availableCount: 50, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
-            ParkingLot(name: "中商 B2", availableCount: 5, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
-            ParkingLot(name: "民生校區", availableCount: 0, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
-            ParkingLot(name: "操場地下", availableCount: 88, coordinate: .init(), lastUpdated: Date(), type: .motorcycle)
+            ParkingLot(name: "中技 B3", totalCapacity: 200, availableCount: 50, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
+            ParkingLot(name: "中商 B2", totalCapacity: 300, availableCount: 5, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
+            ParkingLot(name: "民生校區", totalCapacity: 100, availableCount: 0, coordinate: .init(), lastUpdated: Date(), type: .motorcycle),
+            ParkingLot(name: "操場地下", totalCapacity: 150, availableCount: 88, coordinate: .init(), lastUpdated: Date(), type: .motorcycle)
         ],
         error: nil
     )

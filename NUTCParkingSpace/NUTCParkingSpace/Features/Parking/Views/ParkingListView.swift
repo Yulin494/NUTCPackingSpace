@@ -23,8 +23,15 @@ struct ParkingListView: View {
                         .buttonStyle(.bordered)
                     }
                 } else {
-                    ForEach(viewModel.parkingLots) { lot in
-                        ParkingRowView(parkingLot: lot)
+                    ForEach(ParkingType.allCases, id: \.self) { type in
+                        let lots = viewModel.parkingLots.filter { $0.type == type }
+                        if !lots.isEmpty {
+                            Section(header: Text(type.rawValue)) {
+                                ForEach(lots) { lot in
+                                    ParkingRowView(parkingLot: lot)
+                                }
+                            }
+                        }
                     }
                 }
             }

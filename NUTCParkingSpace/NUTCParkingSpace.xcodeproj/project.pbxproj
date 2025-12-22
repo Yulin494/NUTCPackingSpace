@@ -27,6 +27,7 @@
 		88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUTCParkingSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUTCParkingSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUTCParkingSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		88EDF1BE2EF8FC2B00578BDE /* SimulateEntry.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = SimulateEntry.gpx; path = ../SimulateEntry.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		88D9FDB92EF8194800D96BDF = {
 			isa = PBXGroup;
 			children = (
+				88EDF1BE2EF8FC2B00578BDE /* SimulateEntry.gpx */,
 				88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */,
 				88D9FDD72EF8194900D96BDF /* NUTCParkingSpaceTests */,
 				88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */,
@@ -404,12 +406,12 @@
 				DEVELOPMENT_TEAM = S8FBP4YLUA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Info-Manual.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_FILE = Info-Manual.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -434,12 +436,12 @@
 				DEVELOPMENT_TEAM = S8FBP4YLUA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Info-Manual.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_FILE = Info-Manual.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

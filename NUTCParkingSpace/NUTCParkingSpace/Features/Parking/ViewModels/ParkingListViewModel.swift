@@ -8,9 +8,14 @@ class ParkingListViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     private let dataService = ParkingDataService.shared
+    private var timer: Timer?
     
     init() {
         addSubscribers()
+    }
+    
+    deinit {
+        stopAutoRefresh()
     }
     
     func addSubscribers() {
@@ -32,5 +37,23 @@ class ParkingListViewModel: ObservableObject {
     
     func fetchParkingData() {
         dataService.fetchParkingData()
+    }
+    
+    func startAutoRefresh() {
+        // Fetch immediately
+        fetchParkingData()
+        
+        // Invalidate existing timer if any
+        stopAutoRefresh()
+        
+        // Schedule new timer for every 60 seconds
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            self?.fetchParkingData()
+        }
+    }
+    
+    func stopAutoRefresh() {
+        timer?.invalidate()
+        timer = nil
     }
 }

@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import UserNotifications
+import UIKit
 
 class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UNUserNotificationCenterDelegate {
     static let shared = LocationService()
@@ -19,6 +20,11 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        
+        // Enable background location updates
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.pausesLocationUpdatesAutomatically = false
+        
         authorizationStatus = locationManager.authorizationStatus
         UNUserNotificationCenter.current().delegate = self
     }
@@ -67,7 +73,27 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
             return
         }
         
+        // Request background execution time to ensure data fetch completes
+        var bgTaskID: UIBackgroundTaskIdentifier = .invalid
+        bgTaskID = UIApplication.shared.beginBackgroundTask(withName: "FetchParkingData") {
+            // End the task if time expires
+            UIApplication.shared.endBackgroundTask(bgTaskID)
+            bgTaskID = .invalid
+        }
+        
         // Fetch data
+        ParkingDataService.shared.fetchParkingData { [weak self] lots in
+            self?.sendNotification(lots: lots)
+            
+            // End the task when done
+            if bgTaskID != .invalid {
+                UIApplication.shared.endBackgroundTask(bgTaskID)
+                bgTaskID = .invalid
+            }
+        }
+    }
+    
+    func testNotification() {
         ParkingDataService.shared.fetchParkingData { [weak self] lots in
             self?.sendNotification(lots: lots)
         }

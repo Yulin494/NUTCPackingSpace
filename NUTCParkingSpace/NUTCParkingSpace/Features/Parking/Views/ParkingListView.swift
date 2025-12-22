@@ -37,11 +37,23 @@ struct ParkingListView: View {
             }
             .navigationTitle("機車車位查詢")
             .onAppear {
-                viewModel.fetchParkingData()
+                viewModel.startAutoRefresh()
                 LocationService.shared.requestPermissions()
+            }
+            .onDisappear {
+                viewModel.stopAutoRefresh()
             }
             .refreshable {
                 viewModel.fetchParkingData()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        LocationService.shared.testNotification()
+                    }) {
+                        Image(systemName: "bell.badge")
+                    }
+                }
             }
         }
     }

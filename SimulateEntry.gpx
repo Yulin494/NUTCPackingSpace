@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="Xcode">
+    <!-- Waypoint 1: Outside the 1000m radius (approx 2km north) -->
+    <wpt lat="24.168000" lon="120.683974">
+        <name>Outside Region</name>
+        <time>2025-12-22T12:27:00Z</time>
+    </wpt>
+    
+    <!-- Waypoint 2: Inside the region (Campus Center) -->
+    <wpt lat="24.149691" lon="120.683974">
+        <name>NUTC Campus Center</name>
+        <time>2025-12-22T12:27:05Z</time>
+    </wpt>
+</gpx>

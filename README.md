@@ -14,7 +14,7 @@
 
 | 主畫面 | Widget 小工具 | 即時動態 |
 |:---:|:---:|:---:|
-| <img src="image/IMG_2075.jpg" width="250"> | <img src="image/IMG_2076.PNG" width="250"> | <img src="image/IMG_2077.jpg" width="250"> |
+|<img src="image/IMG_2076.PNG" width="250"> |<img src="image/IMG_2075.jpg" width="250">  | <img src="image/IMG_2077.jpg" width="250"> |
 
 ## 🛠️ 使用技術
 

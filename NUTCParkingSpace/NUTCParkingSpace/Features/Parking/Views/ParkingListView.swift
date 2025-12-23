@@ -35,7 +35,7 @@ struct ParkingListView: View {
                     }
                 }
             }
-            .navigationTitle("機車車位查詢")
+            .navigationTitle("臺中科大剩餘車位")
             .onAppear {
                 viewModel.startAutoRefresh()
                 LocationService.shared.requestPermissions()

@@ -28,7 +28,29 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      shouldAutocreateTestPlan = "NO">
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "88D9FDD32EF8194900D96BDF"
+               BuildableName = "NUTCParkingSpaceTests.xctest"
+               BlueprintName = "NUTCParkingSpaceTests"
+               ReferencedContainer = "container:NUTCParkingSpace.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "88D9FDDD2EF8194900D96BDF"
+               BuildableName = "NUTCParkingSpaceUITests.xctest"
+               BlueprintName = "NUTCParkingSpaceUITests"
+               ReferencedContainer = "container:NUTCParkingSpace.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

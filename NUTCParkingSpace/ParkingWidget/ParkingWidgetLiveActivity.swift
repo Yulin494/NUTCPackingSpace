@@ -54,32 +54,54 @@ struct ParkingLiveActivityLockScreenView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        VStack(spacing: 12) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(context.attributes.parkingName)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    
-                    Text("最後更新: \(context.state.lastUpdated.formatted(date: .omitted, time: .shortened))")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Spacer()
-                
-                Text("\(context.state.availableCount)")
-                    .font(.system(size: 60, weight: .heavy))
-                    .foregroundStyle(context.state.availableCount > 0 ? Color.green : Color.red)
+        HStack(alignment: .top, spacing: 15) {
+            // App Icon (Safe Fallback)
+            // 注意：若要在 Widget 中顯示 AppIcon，請確保 Assets.xcassets 有勾選 ParkingWidgetExtension Target
+            // 或者建立一個名為 "AppIcon" 的 Image Set
+            if let uiImage = UIImage(named: "AppIcon") {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .clipShape(ContainerRelativeShape())
+            } else {
+                // Fallback if image not found
+                Image(systemName: "motorcycle.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .foregroundStyle(.cyan)
+                    .background(Color.white)
+                    .clipShape(Circle())
             }
             
-            
-            // 滿載率與時間底部資訊
-            OccupancyBarView(
-                available: context.state.availableCount,
-                total: context.state.totalCapacity,
-                lastUpdated: context.state.lastUpdated
-            )
+            VStack(spacing: 12) {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(context.attributes.parkingName)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        
+                        Text("最後更新: \(context.state.lastUpdated.formatted(date: .omitted, time: .shortened))")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("\(context.state.availableCount)")
+                        .font(.system(size: 60, weight: .heavy))
+                        .foregroundStyle(context.state.availableCount > 0 ? Color.green : Color.red)
+                }
+                
+                
+                // 滿載率與時間底部資訊
+                OccupancyBarView(
+                    available: context.state.availableCount,
+                    total: context.state.totalCapacity,
+                    lastUpdated: context.state.lastUpdated
+                )
+            }
         }
         .padding()
         .activityBackgroundTint(Color(UIColor.systemBackground))

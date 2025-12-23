@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct NUTCParkingSpaceApp: App {
+    @AppStorage("hasShownOnboarding") var hasShownOnboarding: Bool = false
+    
     // Initialize LocationService on app launch to handle permissions/delegates if needed
     init() {
         _ = LocationService.shared
@@ -16,7 +18,12 @@ struct NUTCParkingSpaceApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ParkingListView()
+            if hasShownOnboarding {
+                ParkingListView()
+                    .transition(.opacity)
+            } else {
+                OnboardingView(hasShownOnboarding: $hasShownOnboarding)
+            }
         }
     }
 }

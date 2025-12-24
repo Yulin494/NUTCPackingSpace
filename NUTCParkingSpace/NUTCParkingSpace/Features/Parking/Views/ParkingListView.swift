@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ParkingListView: View {
     @StateObject private var viewModel = ParkingListViewModel()
+    // 控制設定頁面的顯示狀態
+    @State private var showSettings = false
     
     var body: some View {
         NavigationView {
@@ -48,12 +50,17 @@ struct ParkingListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
+                    // 設定按鈕：點擊開啟設定頁面
                     Button(action: {
-                        LocationService.shared.testNotification()
+                        showSettings = true
                     }) {
-                        Image(systemName: "bell.badge")
+                        Image(systemName: "gearshape")
                     }
                 }
+            }
+            // 彈出設定頁面
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
             }
         }
     }

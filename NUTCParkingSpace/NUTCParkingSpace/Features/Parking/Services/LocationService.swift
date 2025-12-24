@@ -27,6 +27,9 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         
         authorizationStatus = locationManager.authorizationStatus
         UNUserNotificationCenter.current().delegate = self
+        
+        // 註冊預設設定值：預設開啟監控
+        UserDefaults.standard.register(defaults: ["isMonitoringEnabled": true])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -44,6 +47,7 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         }
     }
     
+    // 開始監測校園中心範圍
     func startMonitoring() {
         guard CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) else { return }
         
@@ -54,9 +58,35 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         locationManager.startMonitoring(for: region)
     }
     
+    // 停止監測
+    func stopMonitoring() {
+        for region in locationManager.monitoredRegions {
+            if region.identifier == regionIdentifier {
+                locationManager.stopMonitoring(for: region)
+            }
+        }
+    }
+    
+    // 根據設定開啟或關閉監測
+    func updateMonitoring(enabled: Bool) {
+        if enabled {
+            requestPermissions() // 開啟時確保有權限
+            if authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse {
+                startMonitoring()
+            }
+        } else {
+            stopMonitoring()
+        }
+    }
+    
+    // 當位置權限改變時觸發
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
-        if manager.authorizationStatus == .authorizedAlways || manager.authorizationStatus == .authorizedWhenInUse {
+        // 檢查使用者設定是否開啟監控 (從 UserDefaults 讀取)
+        let isEnabled = UserDefaults.standard.bool(forKey: "isMonitoringEnabled")
+        
+        // 只有在設定開啟且獲得授權時才開始監測
+        if isEnabled && (manager.authorizationStatus == .authorizedAlways || manager.authorizationStatus == .authorizedWhenInUse) {
             startMonitoring()
         }
     }
@@ -90,12 +120,6 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
                 UIApplication.shared.endBackgroundTask(bgTaskID)
                 bgTaskID = .invalid
             }
-        }
-    }
-    
-    func testNotification() {
-        ParkingDataService.shared.fetchParkingData { [weak self] lots in
-            self?.sendNotification(lots: lots)
         }
     }
     

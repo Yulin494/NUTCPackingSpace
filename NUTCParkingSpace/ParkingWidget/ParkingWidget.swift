@@ -71,20 +71,6 @@ struct ParkingWidgetEntryView: View {
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .top, spacing: 10) {
-                // Icon (Safe Fallback)
-                if let uiImage = UIImage(named: "AppIcon") {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45, height: 45)
-                        .clipShape(ContainerRelativeShape())
-                } else {
-                    Image(systemName: "motorcycle.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45, height: 45)
-                        .foregroundStyle(.cyan)
-                }
                 
                 VStack(spacing: 0) {
                 // Header (極簡化，只佔用最少空間)

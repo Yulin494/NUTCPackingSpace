@@ -55,26 +55,7 @@ struct ParkingLiveActivityLockScreenView: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
-            // App Icon (Safe Fallback)
-            // 注意：若要在 Widget 中顯示 AppIcon，請確保 Assets.xcassets 有勾選 ParkingWidgetExtension Target
-            // 或者建立一個名為 "AppIcon" 的 Image Set
-            if let uiImage = UIImage(named: "AppIcon") {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 60, height: 60)
-                    .clipShape(ContainerRelativeShape())
-            } else {
-                // Fallback if image not found
-                Image(systemName: "motorcycle.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 60, height: 60)
-                    .foregroundStyle(.cyan)
-                    .background(Color.white)
-                    .clipShape(Circle())
-            }
-            
+
             VStack(spacing: 12) {
                 HStack {
                     VStack(alignment: .leading) {

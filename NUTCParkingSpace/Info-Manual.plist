@@ -2,21 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSSupportsLiveActivities</key>
-	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>需要您的位置以在接近停車場時發送通知</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>需要您的位置以顯示附近的停車場</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-		<string>fetch</string>
-	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+    <key>NSSupportsLiveActivities</key>
+    <true/>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>需要您的位置以在接近停車場時發送通知</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>需要您的位置以顯示附近的停車場</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>fetch</string>
+    </array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

@@ -16,13 +16,20 @@ struct NUTCParkingSpaceApp: App {
         _ = LocationService.shared
     }
 
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some Scene {
         WindowGroup {
-            if hasShownOnboarding {
-                ParkingListView()
-                    .transition(.opacity)
-            } else {
-                OnboardingView(hasShownOnboarding: $hasShownOnboarding)
+            Group {
+                if hasShownOnboarding {
+                    ParkingListView()
+                        .transition(.opacity)
+                } else {
+                    OnboardingView(hasShownOnboarding: $hasShownOnboarding)
+                }
+            }
+            .onAppear {
+                // App 啟動初始化邏輯可放在這裡
             }
         }
     }

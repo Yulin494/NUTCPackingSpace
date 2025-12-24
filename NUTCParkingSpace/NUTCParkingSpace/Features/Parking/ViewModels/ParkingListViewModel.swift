@@ -35,8 +35,10 @@ class ParkingListViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func fetchParkingData() {
-        dataService.fetchParkingData()
+    func fetchParkingData(completion: (() -> Void)? = nil) {
+        dataService.fetchParkingData { _ in
+            completion?()
+        }
     }
     
     func startAutoRefresh() {

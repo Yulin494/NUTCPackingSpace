@@ -60,6 +60,14 @@ struct ParkingListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 8) {
+                        // 追蹤全部按鈕
+                        Button(action: {
+                            HapticManager.shared.impact(style: .medium)
+                            CommuteManager.shared.startTrackingAll()
+                        }) {
+                            Image(systemName: "eye.fill")
+                        }
+                        
                         // 地圖按鈕
                         Button(action: {
                             HapticManager.shared.impact(style: .light)

@@ -7,8 +7,14 @@ class CommuteManager: NSObject, ObservableObject {
     static let shared = CommuteManager()
     
     @Published var isCommuting = false
-    @Published var currentLot: ParkingLot?
+    @Published var trackingDescription: String?
     
+    enum TrackingMode {
+        case single(String)
+        case all
+    }
+    
+    private var trackingMode: TrackingMode?
     private var currentActivity: Activity<ParkingAttributes>?
     private var timer: Timer?
     private let locationManager = CLLocationManager()
@@ -28,6 +34,19 @@ class CommuteManager: NSObject, ObservableObject {
     }
     
     func startCommuting(for lot: ParkingLot) {
+        startTracking(mode: .single(lot.name), initialLots: [lot])
+    }
+    
+    func startTrackingAll() {
+        // Fetch all lots first to start immediately
+        ParkingDataService.shared.fetchParkingData { [weak self] lots in
+            // Filter motorcycle lots for "all" tracking usually
+            let motorLots = lots.filter { $0.type == .motorcycle }
+            self?.startTracking(mode: .all, initialLots: motorLots)
+        }
+    }
+    
+    private func startTracking(mode: TrackingMode, initialLots: [ParkingLot]) {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
             print("即時動態功能未啟用")
             return
@@ -35,14 +54,27 @@ class CommuteManager: NSObject, ObservableObject {
         
         stopCommuting() // 停止之前的會話
         
-        self.currentLot = lot
+        self.trackingMode = mode
         self.isCommuting = true
         
-        // 1. 啟動即時動態 (Live Activity)
-        let attributes = ParkingAttributes(parkingName: lot.name)
+        // Setup initial content
+        let liteLots = initialLots.map {
+            ParkingAttributes.LiteLot(name: $0.name, available: $0.availableCount, total: $0.totalCapacity)
+        }
+        
+        let title: String
+        switch mode {
+        case .single(let name):
+            title = name
+            self.trackingDescription = "正在監控 \(name)"
+        case .all:
+            title = "全校車位概況"
+            self.trackingDescription = "正在監控所有車位"
+        }
+        
+        let attributes = ParkingAttributes(title: title)
         let contentState = ParkingAttributes.ContentState(
-            availableCount: lot.availableCount,
-            totalCapacity: lot.totalCapacity,
+            lots: liteLots,
             lastUpdated: Date()
         )
         
@@ -64,9 +96,6 @@ class CommuteManager: NSObject, ObservableObject {
         
         // 3. 啟動計時器進行資料抓取
         startTimer()
-        
-        // 立即抓取一次
-        fetchAndUpdate()
     }
     
     func stopCommuting() {
@@ -83,8 +112,9 @@ class CommuteManager: NSObject, ObservableObject {
         timer?.invalidate()
         timer = nil
         
-        self.currentLot = nil
+        self.trackingMode = nil
         self.isCommuting = false
+        self.trackingDescription = nil
         print("停止通勤模式")
     }
     
@@ -96,25 +126,38 @@ class CommuteManager: NSObject, ObservableObject {
     }
     
     private func fetchAndUpdate() {
-        guard let lotName = currentLot?.name else { return }
-        print("正在抓取資料: \(lotName)...")
+        guard let mode = trackingMode else { return }
+        print("正在抓取資料更新動態...")
         
         ParkingDataService.shared.fetchParkingData { [weak self] lots in
             guard let self = self else { return }
             
-            if let updatedLot = lots.first(where: { $0.name == lotName }) {
-                self.currentLot = updatedLot
-                self.updateActivity(with: updatedLot)
+            var targetLots: [ParkingLot] = []
+            
+            switch mode {
+            case .single(let name):
+                if let lot = lots.first(where: { $0.name == name }) {
+                    targetLots = [lot]
+                }
+            case .all:
+                targetLots = lots.filter { $0.type == .motorcycle } // Assuming preference for motorcycle or we take all
+            }
+            
+            if !targetLots.isEmpty {
+                self.updateActivity(with: targetLots)
             }
         }
     }
     
-    private func updateActivity(with lot: ParkingLot) {
+    private func updateActivity(with lots: [ParkingLot]) {
         guard let activity = currentActivity else { return }
         
+        let liteLots = lots.map {
+            ParkingAttributes.LiteLot(name: $0.name, available: $0.availableCount, total: $0.totalCapacity)
+        }
+        
         let contentState = ParkingAttributes.ContentState(
-            availableCount: lot.availableCount,
-            totalCapacity: lot.totalCapacity,
+            lots: liteLots,
             lastUpdated: Date()
         )
         
@@ -122,7 +165,7 @@ class CommuteManager: NSObject, ObservableObject {
             await activity.update(
                 ActivityContent(state: contentState, staleDate: nil)
             )
-            print("更新即時動態數量: \(lot.availableCount)")
+            print("更新即時動態: \(liteLots.count) 筆資料")
         }
     }
 }

@@ -10,6 +10,14 @@
 		8EBC8CA92EF9084300407A3C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBC8CA82EF9084300407A3C /* WidgetKit.framework */; };
 		8EBC8CAB2EF9084400407A3C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBC8CAA2EF9084300407A3C /* SwiftUI.framework */; };
 		8EBC8CBA2EF9084700407A3C /* ParkingWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F1D72E9B2F4C514E007C3B14 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBC8CA82EF9084300407A3C /* WidgetKit.framework */; };
+		F1D72E9C2F4C514E007C3B14 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBC8CAA2EF9084300407A3C /* SwiftUI.framework */; };
+		F1D72EB52F4C51C1007C3B14 /* ParkingWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = F1D72EB42F4C51C1007C3B14 /* ParkingWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F1D72EC82F4D81A4007C3B14 /* NUTCParkingShared in Frameworks */ = {isa = PBXBuildFile; productRef = F1D72EC72F4D81A4007C3B14 /* NUTCParkingShared */; };
+		F1D72ECA2F4D8323007C3B14 /* NUTCParkingShared in Frameworks */ = {isa = PBXBuildFile; productRef = F1D72EC92F4D8323007C3B14 /* NUTCParkingShared */; };
+		F1D72ECE2F4D832C007C3B14 /* NUTCParkingShared in Frameworks */ = {isa = PBXBuildFile; productRef = F1D72ECD2F4D832C007C3B14 /* NUTCParkingShared */; };
+		F1D72ED02F4D834B007C3B14 /* NUTCParkingShared in Frameworks */ = {isa = PBXBuildFile; productRef = F1D72ECF2F4D834B007C3B14 /* NUTCParkingShared */; };
+		F1D72F572F4D8E44007C3B14 /* ParkingWatchWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F1D72E9A2F4C514E007C3B14 /* ParkingWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +42,20 @@
 			remoteGlobalIDString = 8EBC8CA52EF9084200407A3C;
 			remoteInfo = ParkingWidgetExtension;
 		};
+		F1D72EB62F4C51C1007C3B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88D9FDBA2EF8194800D96BDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1D72EB32F4C51C1007C3B14;
+			remoteInfo = "ParkingWatch Watch App";
+		};
+		F1D72F522F4D8DC0007C3B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88D9FDBA2EF8194800D96BDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1D72E992F4C514E007C3B14;
+			remoteInfo = ParkingWatchWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +70,28 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1D72EC22F4C51C1007C3B14 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				F1D72EB52F4C51C1007C3B14 /* ParkingWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72F562F4D8DDC007C3B14 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F1D72F572F4D8E44007C3B14 /* ParkingWatchWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +102,11 @@
 		8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParkingWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBC8CA82EF9084300407A3C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		8EBC8CAA2EF9084300407A3C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		F1D72E9A2F4C514E007C3B14 /* ParkingWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ParkingWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D72EAF2F4C51C1007C3B14 /* ParkingWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ParkingWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D72EB42F4C51C1007C3B14 /* ParkingWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ParkingWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D72ED12F4D838E007C3B14 /* ParkingWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ParkingWidgetExtension.entitlements; sourceTree = "<group>"; };
+		F1D72ED22F4D83A9007C3B14 /* ParkingWatchWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ParkingWatchWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -83,6 +132,13 @@
 				RefreshIntent.swift,
 			);
 			target = 88D9FDC12EF8194800D96BDF /* NUTCParkingSpace */;
+		};
+		F1D72EA92F4C514F007C3B14 /* Exceptions for "ParkingWatchWidget" folder in "ParkingWatchWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F1D72E992F4C514E007C3B14 /* ParkingWatchWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -114,6 +170,19 @@
 			path = ParkingWidget;
 			sourceTree = "<group>";
 		};
+		F1D72E9D2F4C514E007C3B14 /* ParkingWatchWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F1D72EA92F4C514F007C3B14 /* Exceptions for "ParkingWatchWidget" folder in "ParkingWatchWidgetExtension" target */,
+			);
+			path = ParkingWatchWidget;
+			sourceTree = "<group>";
+		};
+		F1D72EB82F4C51C1007C3B14 /* ParkingWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ParkingWatch;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +190,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1D72EC82F4D81A4007C3B14 /* NUTCParkingShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +214,25 @@
 			files = (
 				8EBC8CAB2EF9084400407A3C /* SwiftUI.framework in Frameworks */,
 				8EBC8CA92EF9084300407A3C /* WidgetKit.framework in Frameworks */,
+				F1D72ECA2F4D8323007C3B14 /* NUTCParkingShared in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72E972F4C514E007C3B14 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1D72E9C2F4C514E007C3B14 /* SwiftUI.framework in Frameworks */,
+				F1D72E9B2F4C514E007C3B14 /* WidgetKit.framework in Frameworks */,
+				F1D72ECE2F4D832C007C3B14 /* NUTCParkingShared in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72EB12F4C51C1007C3B14 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1D72ED02F4D834B007C3B14 /* NUTCParkingShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,11 +242,15 @@
 		88D9FDB92EF8194800D96BDF = {
 			isa = PBXGroup;
 			children = (
+				F1D72ED22F4D83A9007C3B14 /* ParkingWatchWidgetExtension.entitlements */,
+				F1D72ED12F4D838E007C3B14 /* ParkingWidgetExtension.entitlements */,
 				88EDF1BE2EF8FC2B00578BDE /* SimulateEntry.gpx */,
 				88D9FDC42EF8194800D96BDF /* NUTCParkingSpace */,
 				88D9FDD72EF8194900D96BDF /* NUTCParkingSpaceTests */,
 				88D9FDE12EF8194900D96BDF /* NUTCParkingSpaceUITests */,
 				8EBC8CAC2EF9084400407A3C /* ParkingWidget */,
+				F1D72E9D2F4C514E007C3B14 /* ParkingWatchWidget */,
+				F1D72EB82F4C51C1007C3B14 /* ParkingWatch */,
 				8EBC8CA72EF9084300407A3C /* Frameworks */,
 				88D9FDC32EF8194800D96BDF /* Products */,
 			);
@@ -170,6 +263,9 @@
 				88D9FDD42EF8194900D96BDF /* NUTCParkingSpaceTests.xctest */,
 				88D9FDDE2EF8194900D96BDF /* NUTCParkingSpaceUITests.xctest */,
 				8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */,
+				F1D72E9A2F4C514E007C3B14 /* ParkingWatchWidgetExtension.appex */,
+				F1D72EAF2F4C51C1007C3B14 /* ParkingWatch.app */,
+				F1D72EB42F4C51C1007C3B14 /* ParkingWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -205,6 +301,7 @@
 			);
 			name = NUTCParkingSpace;
 			packageProductDependencies = (
+				F1D72EC72F4D81A4007C3B14 /* NUTCParkingShared */,
 			);
 			productName = NUTCParkingSpace;
 			productReference = 88D9FDC22EF8194800D96BDF /* NUTCParkingSpace.app */;
@@ -273,10 +370,78 @@
 			);
 			name = ParkingWidgetExtension;
 			packageProductDependencies = (
+				F1D72EC92F4D8323007C3B14 /* NUTCParkingShared */,
 			);
 			productName = ParkingWidgetExtension;
 			productReference = 8EBC8CA62EF9084200407A3C /* ParkingWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		F1D72E992F4C514E007C3B14 /* ParkingWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D72EAA2F4C514F007C3B14 /* Build configuration list for PBXNativeTarget "ParkingWatchWidgetExtension" */;
+			buildPhases = (
+				F1D72E962F4C514E007C3B14 /* Sources */,
+				F1D72E972F4C514E007C3B14 /* Frameworks */,
+				F1D72E982F4C514E007C3B14 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F1D72E9D2F4C514E007C3B14 /* ParkingWatchWidget */,
+			);
+			name = ParkingWatchWidgetExtension;
+			packageProductDependencies = (
+				F1D72ECD2F4D832C007C3B14 /* NUTCParkingShared */,
+			);
+			productName = ParkingWatchWidgetExtension;
+			productReference = F1D72E9A2F4C514E007C3B14 /* ParkingWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		F1D72EAE2F4C51C1007C3B14 /* ParkingWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D72EC32F4C51C1007C3B14 /* Build configuration list for PBXNativeTarget "ParkingWatch" */;
+			buildPhases = (
+				F1D72EAD2F4C51C1007C3B14 /* Resources */,
+				F1D72EC22F4C51C1007C3B14 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1D72EB72F4C51C1007C3B14 /* PBXTargetDependency */,
+			);
+			name = ParkingWatch;
+			packageProductDependencies = (
+			);
+			productName = ParkingWatch;
+			productReference = F1D72EAF2F4C51C1007C3B14 /* ParkingWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		F1D72EB32F4C51C1007C3B14 /* ParkingWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D72EBF2F4C51C1007C3B14 /* Build configuration list for PBXNativeTarget "ParkingWatch Watch App" */;
+			buildPhases = (
+				F1D72EB02F4C51C1007C3B14 /* Sources */,
+				F1D72EB12F4C51C1007C3B14 /* Frameworks */,
+				F1D72EB22F4C51C1007C3B14 /* Resources */,
+				F1D72F562F4D8DDC007C3B14 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1D72F532F4D8DC0007C3B14 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F1D72EB82F4C51C1007C3B14 /* ParkingWatch */,
+			);
+			name = "ParkingWatch Watch App";
+			packageProductDependencies = (
+				F1D72ECF2F4D834B007C3B14 /* NUTCParkingShared */,
+			);
+			productName = "ParkingWatch Watch App";
+			productReference = F1D72EB42F4C51C1007C3B14 /* ParkingWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -285,7 +450,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					88D9FDC12EF8194800D96BDF = {
@@ -307,6 +472,15 @@
 					8EBC8CA52EF9084200407A3C = {
 						CreatedOnToolsVersion = 26.0;
 					};
+					F1D72E992F4C514E007C3B14 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					F1D72EAE2F4C51C1007C3B14 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					F1D72EB32F4C51C1007C3B14 = {
+						CreatedOnToolsVersion = 26.2;
+					};
 				};
 			};
 			buildConfigurationList = 88D9FDBD2EF8194800D96BDF /* Build configuration list for PBXProject "NUTCParkingSpace" */;
@@ -318,6 +492,9 @@
 			);
 			mainGroup = 88D9FDB92EF8194800D96BDF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F1D72EC62F4D81A4007C3B14 /* XCLocalSwiftPackageReference "../NUTCParkingShared" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 88D9FDC32EF8194800D96BDF /* Products */;
 			projectDirPath = "";
@@ -327,6 +504,9 @@
 				88D9FDD32EF8194900D96BDF /* NUTCParkingSpaceTests */,
 				88D9FDDD2EF8194900D96BDF /* NUTCParkingSpaceUITests */,
 				8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */,
+				F1D72E992F4C514E007C3B14 /* ParkingWatchWidgetExtension */,
+				F1D72EAE2F4C51C1007C3B14 /* ParkingWatch */,
+				F1D72EB32F4C51C1007C3B14 /* ParkingWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -354,6 +534,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8EBC8CA42EF9084200407A3C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72E982F4C514E007C3B14 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72EAD2F4C51C1007C3B14 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72EB22F4C51C1007C3B14 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -391,6 +592,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1D72E962F4C514E007C3B14 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D72EB02F4C51C1007C3B14 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -408,6 +623,16 @@
 			isa = PBXTargetDependency;
 			target = 8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */;
 			targetProxy = 8EBC8CB82EF9084700407A3C /* PBXContainerItemProxy */;
+		};
+		F1D72EB72F4C51C1007C3B14 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1D72EB32F4C51C1007C3B14 /* ParkingWatch Watch App */;
+			targetProxy = F1D72EB62F4C51C1007C3B14 /* PBXContainerItemProxy */;
+		};
+		F1D72F532F4D8DC0007C3B14 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1D72E992F4C514E007C3B14 /* ParkingWatchWidgetExtension */;
+			targetProxy = F1D72F522F4D8DC0007C3B14 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -536,6 +761,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = NUTCParkingSpace/NUTCParkingSpace.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NUTCParkingSpace/Preview Content\"";
@@ -566,6 +792,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = NUTCParkingSpace/NUTCParkingSpace.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NUTCParkingSpace/Preview Content\"";
@@ -668,6 +895,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ParkingWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = S8FBP4YLUA;
@@ -699,6 +927,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ParkingWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = S8FBP4YLUA;
@@ -722,6 +951,174 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F1D72EAB2F4C514F007C3B14 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ParkingWatchWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ParkingWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.watchkitapp.ParkingWatchWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		F1D72EAC2F4C514F007C3B14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ParkingWatchWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ParkingWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.watchkitapp.ParkingWatchWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		F1D72EC02F4C51C1007C3B14 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = ParkingWatch/ParkingWatch.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		F1D72EC12F4C51C1007C3B14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = ParkingWatch/ParkingWatch.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		F1D72EC42F4C51C1007C3B14 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatch;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F1D72EC52F4C51C1007C3B14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S8FBP4YLUA;
+				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatch;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yulin494.NUTCParkingSpace.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -773,7 +1170,63 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F1D72EAA2F4C514F007C3B14 /* Build configuration list for PBXNativeTarget "ParkingWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D72EAB2F4C514F007C3B14 /* Debug */,
+				F1D72EAC2F4C514F007C3B14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D72EBF2F4C51C1007C3B14 /* Build configuration list for PBXNativeTarget "ParkingWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D72EC02F4C51C1007C3B14 /* Debug */,
+				F1D72EC12F4C51C1007C3B14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D72EC32F4C51C1007C3B14 /* Build configuration list for PBXNativeTarget "ParkingWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D72EC42F4C51C1007C3B14 /* Debug */,
+				F1D72EC52F4C51C1007C3B14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		F1D72EC62F4D81A4007C3B14 /* XCLocalSwiftPackageReference "../NUTCParkingShared" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../NUTCParkingShared;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F1D72EC72F4D81A4007C3B14 /* NUTCParkingShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NUTCParkingShared;
+		};
+		F1D72EC92F4D8323007C3B14 /* NUTCParkingShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1D72EC62F4D81A4007C3B14 /* XCLocalSwiftPackageReference "../NUTCParkingShared" */;
+			productName = NUTCParkingShared;
+		};
+		F1D72ECD2F4D832C007C3B14 /* NUTCParkingShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1D72EC62F4D81A4007C3B14 /* XCLocalSwiftPackageReference "../NUTCParkingShared" */;
+			productName = NUTCParkingShared;
+		};
+		F1D72ECF2F4D834B007C3B14 /* NUTCParkingShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1D72EC62F4D81A4007C3B14 /* XCLocalSwiftPackageReference "../NUTCParkingShared" */;
+			productName = NUTCParkingShared;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 88D9FDBA2EF8194800D96BDF /* Project object */;
 }

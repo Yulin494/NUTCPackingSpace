@@ -2,6 +2,7 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 import CoreLocation
+import NUTCParkingShared
 
 // MARK: - 時間軸項目 (Timeline Entry)
 struct ParkingEntry: TimelineEntry {
@@ -17,36 +18,55 @@ struct Provider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (ParkingEntry) -> ()) {
-        let entry = ParkingEntry(date: Date(), parkingLots: placeholderLots(), error: nil)
-        completion(entry)
+            // Try to load from cache first for snapshot
+        if let cachedData = SharedParkingCache.load() {
+            let lots = cachedData.map { ParkingLot(data: $0) }
+            let entry = ParkingEntry(date: Date(), parkingLots: lots, error: nil)
+            completion(entry)
+        } else {
+            let entry = ParkingEntry(date: Date(), parkingLots: placeholderLots(), error: nil)
+            completion(entry)
+        }
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ParkingEntry>) -> ()) {
         // 抓取即時資料
-        ParkingDataService.shared.fetchParkingData { lots in
-            let currentDate = Date()
-            
-            // 邏輯處理：只顯示機車停車場 (.motorcycle) 並依剩餘車位排序 (由多到少)
-            let filteredLots = lots
-                .filter { $0.type == .motorcycle }
-                .sorted { $0.availableCount > $1.availableCount }
-            
-            // 建立 Entry
-            // 如果 fetch 失敗 (lots 為空且 Service 有錯誤訊息)，可以傳遞 error
-            // 這裡簡單處理：如果有資料就顯示，沒資料看是否是錯誤
-            let errorMsg = filteredLots.isEmpty ? ParkingDataService.shared.errorMessage : nil
-            
-            let entry = ParkingEntry(
-                date: currentDate,
-                parkingLots: filteredLots,
-                error: errorMsg
-            )
-            
-            // 設定更新策略：現在起 15 分鐘後再次更新
-            let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
-            let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-            
-            completion(timeline)
+        Task {
+            do {
+                let sharedLots = try await ParkingFetchService.shared.fetchParkingData()
+                
+                // Cache data
+                SharedParkingCache.save(sharedLots)
+                
+                let lots = sharedLots.map { ParkingLot(data: $0) }
+                let currentDate = Date()
+                
+                // 邏輯處理：只顯示機車停車場 (.motorcycle) 並依剩餘車位排序 (由多到少)
+                let filteredLots = lots
+                    .filter { $0.type == .motorcycle }
+                    .sorted { $0.availableCount > $1.availableCount }
+                
+                let entry = ParkingEntry(
+                    date: currentDate,
+                    parkingLots: filteredLots,
+                    error: nil
+                )
+                
+                let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+                let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                completion(timeline)
+                
+            } catch {
+                let currentDate = Date()
+                let entry = ParkingEntry(
+                    date: currentDate,
+                    parkingLots: [],
+                    error: "連線失敗: \(error.localizedDescription)"
+                )
+                let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+                let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+                completion(timeline)
+            }
         }
     }
     
@@ -70,9 +90,8 @@ struct ParkingWidgetEntryView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            HStack(alignment: .top, spacing: 10) {
+            VStack(spacing: 0) { // Removed unnecessary HStack for alignment
                 
-                VStack(spacing: 0) {
                 // Header (極簡化，只佔用最少空間)
                 HStack {
                     Label("機車車位", systemImage: "motorcycle.fill")
@@ -81,7 +100,10 @@ struct ParkingWidgetEntryView: View {
                     
                     Spacer()
                     
-                    Button(intent: RefreshIntent()) {
+                    // Refresh Button is not supported in non-interactive widgets properly without AppIntent working perfectly, 
+                    // keeping it visual or as deep link. The original code used Button with Intent.
+                    // Assuming RefreshIntent exists in the project scope.
+                     Button(intent: RefreshIntent()) {
                         HStack(spacing: 2) {
                             Text(entry.date, style: .time)
                                 .font(.system(size: 8))
@@ -138,7 +160,6 @@ struct ParkingWidgetEntryView: View {
                     }
                 }
             }
-            } // End of HStack
         }
         .padding(12)
         .containerBackground(for: .widget) {

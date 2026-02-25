@@ -3,6 +3,8 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
+import NUTCParkingShared
+
 struct ParkingLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: ParkingAttributes.self) { context in
@@ -183,7 +185,7 @@ private struct OccupancyBarView: View {
 }
 
 private struct ParkingGridItem: View {
-    let lot: ParkingAttributes.LiteLot
+    let lot: LiteLot
     
     var occupancyRate: Double {
         guard lot.total > 0 else { return 0 }

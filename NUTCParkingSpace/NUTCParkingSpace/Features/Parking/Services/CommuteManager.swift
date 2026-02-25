@@ -2,6 +2,7 @@ import Foundation
 import ActivityKit
 import CoreLocation
 import Combine
+import NUTCParkingShared
 
 class CommuteManager: NSObject, ObservableObject {
     static let shared = CommuteManager()
@@ -59,7 +60,7 @@ class CommuteManager: NSObject, ObservableObject {
         
         // Setup initial content
         let liteLots = initialLots.map {
-            ParkingAttributes.LiteLot(name: $0.name, available: $0.availableCount, total: $0.totalCapacity)
+            LiteLot(name: $0.name, available: $0.availableCount, total: $0.totalCapacity)
         }
         
         let title: String
@@ -153,7 +154,7 @@ class CommuteManager: NSObject, ObservableObject {
         guard let activity = currentActivity else { return }
         
         let liteLots = lots.map {
-            ParkingAttributes.LiteLot(name: $0.name, available: $0.availableCount, total: $0.totalCapacity)
+            LiteLot(name: $0.name, available: $0.availableCount, total: $0.totalCapacity)
         }
         
         let contentState = ParkingAttributes.ContentState(

@@ -1,19 +1,23 @@
 import ActivityKit
 import Foundation
+import NUTCParkingShared
 
-struct ParkingAttributes: ActivityAttributes {
+public struct ParkingAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // 動態狀態屬性 (會隨時間更新)
-        var lots: [LiteLot]
-        var lastUpdated: Date
-    }
-
-    public struct LiteLot: Codable, Hashable {
-        var name: String
-        var available: Int
-        var total: Int
+        public var lots: [LiteLot]
+        public var lastUpdated: Date
+        
+        public init(lots: [LiteLot], lastUpdated: Date) {
+            self.lots = lots
+            self.lastUpdated = lastUpdated
+        }
     }
 
     // 固定屬性 (不會改變)
-    var title: String
+    public var title: String
+    
+    public init(title: String) {
+        self.title = title
+    }
 }

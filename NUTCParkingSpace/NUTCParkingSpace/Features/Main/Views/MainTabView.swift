@@ -6,37 +6,29 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @State private var selectedTab = 2
+
     var body: some View {
-        TabView {
-            // Tab 1: 停車
+        TabView(selection: $selectedTab) {
             ParkingListView()
-                .tabItem {
-                    Label("停車", systemImage: "parkingsign")
-                }
+                .tabItem { Label("停車", systemImage: "parkingsign") }
+                .tag(0)
 
-            // Tab 2: 課業
             StudyHubView()
-                .tabItem {
-                    Label("課業", systemImage: "book.fill")
-                }
+                .tabItem { Label("課業", systemImage: "book.fill") }
+                .tag(1)
 
-            // Tab 3: 首頁（中間）
             HomeView()
-                .tabItem {
-                    Label("首頁", systemImage: "house.fill")
-                }
+                .tabItem { Label("首頁", systemImage: "house.fill") }
+                .tag(2)
 
-            // Tab 4: 校園
             CampusHubView()
-                .tabItem {
-                    Label("校園", systemImage: "building.2.fill")
-                }
+                .tabItem { Label("校園", systemImage: "building.2.fill") }
+                .tag(3)
 
-            // Tab 5: 設定
             SettingsView()
-                .tabItem {
-                    Label("設定", systemImage: "gearshape.fill")
-                }
+                .tabItem { Label("設定", systemImage: "gearshape.fill") }
+                .tag(4)
         }
     }
 }

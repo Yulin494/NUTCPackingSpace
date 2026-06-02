@@ -2,104 +2,56 @@
 //  HomeworkView.swift
 //  NUTCParkingSpace
 //
-//  Created by Claude
-//
 
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct HomeworkView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var showAddHomework = false
+    @State private var showCompleted = false
     @Query(sort: \HomeworkItem.dueDate) var homeworks: [HomeworkItem]
 
-    var uncomplateds: [HomeworkItem] {
+    private var pending: [HomeworkItem] {
         homeworks.filter { !$0.isCompleted }
     }
 
-    var completeds: [HomeworkItem] {
+    private var completeds: [HomeworkItem] {
         homeworks.filter { $0.isCompleted }
     }
 
     var body: some View {
-        List {
-            if uncomplateds.isEmpty && completeds.isEmpty {
-                Section {
-                    Text("尚無作業")
-                        .foregroundColor(.secondary)
-                }
-            } else {
-                Section(header: Text("待完成")) {
-                    if uncomplateds.isEmpty {
-                        Text("所有作業都已完成！")
-                            .foregroundColor(.green)
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                if pending.isEmpty && completeds.isEmpty {
+                    emptyStateCard
+                } else {
+                    // 待完成區塊
+                    if pending.isEmpty {
+                        allDoneCard
                     } else {
-                        ForEach(uncomplateds) { homework in
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Image(systemName: homework.isCompleted ? "checkmark.circle.fill" : "circle")
-                                        .onTapGesture {
-                                            homework.isCompleted.toggle()
-                                        }
-                                        .foregroundColor(homework.isCompleted ? .green : .gray)
-
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(homework.title)
-                                            .font(.headline)
-                                            .strikethrough(homework.isCompleted)
-                                        Text(homework.courseName)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-
-                                    Spacer()
-
-                                    VStack(alignment: .trailing, spacing: 2) {
-                                        let daysLeft = daysUntil(homework.dueDate)
-                                        if daysLeft <= 0 {
-                                            Text("已逾期")
-                                                .font(.caption2)
-                                                .foregroundColor(.red)
-                                        } else if daysLeft == 0 {
-                                            Text("今天")
-                                                .font(.caption2)
-                                                .foregroundColor(.orange)
-                                        } else {
-                                            Text("\(daysLeft) 天後")
-                                                .font(.caption2)
-                                                .foregroundColor(.blue)
-                                        }
-
-                                        Text(homework.dueDate.formatted(date: .abbreviated, time: .omitted))
-                                            .font(.caption2)
-                                            .foregroundColor(.secondary)
-                                    }
+                        ForEach(pending) { homework in
+                            HomeworkCard(homework: homework, onToggle: {
+                                withAnimation(.spring(response: 0.3)) {
+                                    homework.isCompleted.toggle()
+                                    syncNotifications()
                                 }
-                            }
+                            })
                         }
                     }
-                }
 
-                if !completeds.isEmpty {
-                    Section(header: Text("已完成 (\(completeds.count))")) {
-                        ForEach(completeds) { homework in
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(homework.title)
-                                    .font(.headline)
-                                    .strikethrough(true)
-                                    .foregroundColor(.secondary)
-                                Text(homework.courseName)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .onDelete { indices in
-                            indices.forEach { modelContext.delete(completeds[$0]) }
-                        }
+                    // 已完成摺疊區塊
+                    if !completeds.isEmpty {
+                        completedSection
                     }
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
+            .padding(.bottom, 32)
         }
+        .background(Color(UIColor.systemGroupedBackground))
         .navigationTitle("作業追蹤")
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
@@ -111,29 +63,204 @@ struct HomeworkView: View {
         .sheet(isPresented: $showAddHomework) {
             AddHomeworkView(isPresented: $showAddHomework)
         }
+        .onAppear { syncNotifications() }
+        .onChange(of: homeworks.count) { syncNotifications() }
+        .onChange(of: pending.count) { syncNotifications() }
     }
 
-    private func daysUntil(_ date: Date) -> Int {
-        let calendar = Calendar.current
-        let today = calendar.dateComponents([.year, .month, .day], from: Date())
-        let targetDate = calendar.dateComponents([.year, .month, .day], from: date)
+    // MARK: - Sub Views
 
-        guard let todayDate = calendar.date(from: today),
-              let targetDateFromComponents = calendar.date(from: targetDate) else {
-            return 0
+    private var emptyStateCard: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "checkmark.circle")
+                .font(.system(size: 44))
+                .foregroundColor(.secondary)
+            Text("尚無作業")
+                .font(.headline)
+                .foregroundColor(.secondary)
+            Text("點右上角「+」新增作業")
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
+        .frame(maxWidth: .infinity)
+        .padding(32)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.07), radius: 10, y: 3)
+    }
 
-        let components = calendar.dateComponents([.day], from: todayDate, to: targetDateFromComponents)
-        return components.day ?? 0
+    private var allDoneCard: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "checkmark.seal.fill")
+                .font(.title2)
+                .foregroundColor(.green)
+            Text("所有作業都已完成！")
+                .font(.headline)
+                .foregroundColor(.green)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.07), radius: 10, y: 3)
+    }
+
+    private var completedSection: some View {
+        VStack(spacing: 8) {
+            Button(action: {
+                withAnimation(.spring(response: 0.3)) {
+                    showCompleted.toggle()
+                }
+            }) {
+                HStack {
+                    Text("已完成 (\(completeds.count))")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Image(systemName: showCompleted ? "chevron.up" : "chevron.down")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+
+            if showCompleted {
+                ForEach(completeds) { homework in
+                    HomeworkCard(homework: homework, onToggle: {
+                        withAnimation(.spring(response: 0.3)) {
+                            homework.isCompleted.toggle()
+                            syncNotifications()
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func syncNotifications() {
+        Task { await HomeworkNotificationService.shared.reschedule(homeworks: homeworks) }
     }
 }
+
+// MARK: - HomeworkCard
+
+struct HomeworkCard: View {
+    let homework: HomeworkItem
+    let onToggle: () -> Void
+
+    private var daysLeft: Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let due = calendar.startOfDay(for: homework.dueDate)
+        return calendar.dateComponents([.day], from: today, to: due).day ?? 0
+    }
+
+    private var urgencyColor: Color {
+        if homework.isCompleted { return .gray }
+        switch daysLeft {
+        case ..<0:   return .red
+        case 0:      return .red
+        case 1...2:  return .orange
+        case 3...7:  return .yellow
+        default:     return .blue
+        }
+    }
+
+    private var dueLabel: some View {
+        Group {
+            if homework.isCompleted {
+                Text("已完成")
+                    .font(.caption2).fontWeight(.semibold)
+                    .foregroundColor(.green)
+            } else if daysLeft < 0 {
+                Text("已逾期")
+                    .font(.caption2).fontWeight(.semibold)
+                    .foregroundColor(.red)
+            } else if daysLeft == 0 {
+                Text("今天到期")
+                    .font(.caption2).fontWeight(.semibold)
+                    .foregroundColor(.red)
+            } else if daysLeft <= 2 {
+                Text("\(daysLeft)天後")
+                    .font(.caption2).fontWeight(.semibold)
+                    .foregroundColor(.orange)
+            } else {
+                Text("\(daysLeft)天後")
+                    .font(.caption2).fontWeight(.semibold)
+                    .foregroundColor(.blue)
+            }
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 0) {
+            // 左側彩色色條
+            Rectangle()
+                .fill(urgencyColor)
+                .frame(width: 4)
+                .clipShape(RoundedRectangle(cornerRadius: 2))
+                .padding(.vertical, 10)
+
+            HStack(spacing: 12) {
+                // 勾選圓圈
+                Button(action: onToggle) {
+                    Image(systemName: homework.isCompleted ? "checkmark.circle.fill" : "circle")
+                        .font(.title3)
+                        .foregroundColor(homework.isCompleted ? .green : .secondary)
+                }
+                .buttonStyle(.plain)
+
+                // 標題 + 科目
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(homework.title)
+                        .font(.headline)
+                        .strikethrough(homework.isCompleted || daysLeft < 0)
+                        .foregroundColor(
+                            (homework.isCompleted || daysLeft < 0) ? .secondary : .primary
+                        )
+                    Text(homework.courseName)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                // 右側到期資訊
+                VStack(alignment: .trailing, spacing: 4) {
+                    dueLabel
+                    Text(homework.dueDate.formatted(date: .abbreviated, time: .omitted))
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 14)
+        }
+        .background(
+            (homework.isCompleted || daysLeft < 0)
+                ? Color(UIColor.tertiarySystemGroupedBackground)
+                : Color(UIColor.secondarySystemGroupedBackground)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.07), radius: 10, y: 3)
+    }
+}
+
+// MARK: - AddHomeworkView
 
 struct AddHomeworkView: View {
     @Environment(\.modelContext) private var modelContext
     @Binding var isPresented: Bool
     @State private var homeworkTitle = ""
     @State private var courseName = ""
-    @State private var dueDate = Date().addingTimeInterval(86400) // 明天
+    @State private var dueDate = Date().addingTimeInterval(86400)
     @State private var note = ""
 
     var body: some View {

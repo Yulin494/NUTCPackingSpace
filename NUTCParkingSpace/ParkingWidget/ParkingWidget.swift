@@ -81,14 +81,44 @@ struct Provider: TimelineProvider {
     }
 }
 
+// MARK: - 鎖定畫面視圖
+struct ParkingLockScreenView: View {
+    var entry: Provider.Entry
+
+    var body: some View {
+        if let best = entry.parkingLots.first {
+            VStack(alignment: .leading, spacing: 2) {
+                Label("機車車位", systemImage: "motorcycle.fill")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(.secondary)
+                HStack {
+                    Text(best.name)
+                        .font(.system(size: 12, weight: .semibold))
+                        .lineLimit(1)
+                    Spacer()
+                    Text("\(best.availableCount) 位")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(best.availableCount > 0 ? .green : .red)
+                }
+            }
+        } else {
+            Label("無資料", systemImage: "motorcycle.fill")
+        }
+    }
+}
+
 // MARK: - 小工具視圖 (Widget View)
 struct ParkingWidgetEntryView: View {
     var entry: Provider.Entry
-    
+
     // 從 View 中取得 Widget 的環境變數 (如尺寸)
     @Environment(\.widgetFamily) var family
 
     var body: some View {
+        if family == .accessoryRectangular {
+            ParkingLockScreenView(entry: entry)
+                .containerBackground(for: .widget) { Color.clear }
+        } else {
         GeometryReader { geometry in
             VStack(spacing: 0) { // Removed unnecessary HStack for alignment
                 
@@ -165,6 +195,7 @@ struct ParkingWidgetEntryView: View {
         .containerBackground(for: .widget) {
             Color(UIColor.systemBackground)
         }
+        } // end else
     }
 }
 
@@ -215,7 +246,7 @@ struct ParkingWidget: Widget {
         }
         .configurationDisplayName("機車車位快看")
         .description("顯示目前校內機車停車場的剩餘數量。")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
     }
 }
 

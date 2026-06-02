@@ -4,6 +4,8 @@
 <dict>
     <key>NSSupportsLiveActivities</key>
     <true/>
+    <key>NSCalendarsFullAccessUsageDescription</key>
+    <string>將 NUTC 學年行事曆加入您的 Apple 日曆</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>需要您的位置以在接近停車場時發送通知</string>
     <key>NSLocationWhenInUseUsageDescription</key>

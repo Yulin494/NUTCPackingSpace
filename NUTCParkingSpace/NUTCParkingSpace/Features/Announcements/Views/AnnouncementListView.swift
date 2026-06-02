@@ -2,112 +2,162 @@
 //  AnnouncementListView.swift
 //  NUTCParkingSpace
 //
-//  Created by Claude
-//
 
 import SwiftUI
+import UIKit
 
 struct AnnouncementListView: View {
     @State private var selectedCategory: AnnouncementCategory = .all
     @StateObject private var viewModel = AnnouncementViewModel()
 
     var filteredAnnouncements: [AnnouncementItem] {
-        if selectedCategory == .all {
-            return viewModel.announcements
-        }
-        return viewModel.announcements.filter { $0.category == selectedCategory }
+        selectedCategory == .all
+            ? viewModel.announcements
+            : viewModel.announcements.filter { $0.category == selectedCategory }
     }
 
     var body: some View {
-        VStack {
-            Picker("分類", selection: $selectedCategory) {
-                ForEach(AnnouncementCategory.allCases, id: \.self) { category in
-                    Text(category.rawValue).tag(category)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding()
-
-            if viewModel.isLoading {
-                VStack {
-                    ProgressView()
-                    Text("載入中...")
-                        .foregroundColor(.secondary)
-                        .padding(.top)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            } else if let errorMessage = viewModel.errorMessage {
-                VStack(spacing: 12) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.title)
-                        .foregroundColor(.orange)
-                    Text("無法載入公告")
-                        .font(.headline)
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Button(action: {
-                        Task {
-                            await viewModel.fetchAnnouncements()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                // 分類 Chip filter
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(AnnouncementCategory.allCases, id: \.self) { cat in
+                            CategoryChip(
+                                label: cat.rawValue,
+                                isSelected: selectedCategory == cat,
+                                color: categoryColor(cat),
+                                action: { withAnimation(.spring(response: 0.3)) { selectedCategory = cat } }
+                            )
                         }
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                            Text("重試")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
                     }
-                    Spacer()
+                    .padding(.horizontal, 16)
                 }
-                .padding()
-            } else if filteredAnnouncements.isEmpty {
-                VStack {
-                    Image(systemName: "newspaper")
-                        .font(.title)
-                        .foregroundColor(.gray)
-                    Text("沒有公告")
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            } else {
-                List(filteredAnnouncements) { announcement in
-                    NavigationLink(destination: AnnouncementDetailView(url: announcement.url)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(announcement.title)
-                                .font(.headline)
-                                .lineLimit(2)
 
-                            HStack {
-                                Text(announcement.date)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text(announcement.category.rawValue)
-                                    .font(.caption2)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Color.blue.opacity(0.1))
-                                    .foregroundColor(.blue)
-                                    .cornerRadius(4)
+                // 內容
+                if viewModel.isLoading {
+                    loadingPlaceholder
+                } else if let err = viewModel.errorMessage, viewModel.announcements.isEmpty {
+                    errorView(err)
+                } else if filteredAnnouncements.isEmpty {
+                    emptyView
+                } else {
+                    LazyVStack(spacing: 12) {
+                        ForEach(filteredAnnouncements) { item in
+                            NavigationLink(destination: AnnouncementDetailView(url: item.url)) {
+                                AnnouncementCardRow(item: item)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
-                }
-                .refreshable {
-                    await viewModel.fetchAnnouncements()
+                    .padding(.horizontal, 16)
                 }
             }
+            .padding(.top, 8)
+            .padding(.bottom, 32)
         }
+        .background(Color(UIColor.systemGroupedBackground))
         .navigationTitle("校園公告")
-        .task {
-            if viewModel.announcements.isEmpty {
-                await viewModel.fetchAnnouncements()
+        .refreshable { await viewModel.fetchAnnouncements() }
+        .task { if viewModel.announcements.isEmpty { await viewModel.fetchAnnouncements() } }
+    }
+
+    // MARK: - States
+    private var loadingPlaceholder: some View {
+        VStack(spacing: 12) {
+            ForEach(0..<5, id: \.self) { _ in
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(UIColor.secondarySystemGroupedBackground))
+                    .frame(height: 80)
+                    .shimmer()
             }
         }
+        .padding(.horizontal, 16)
+    }
+
+    private func errorView(_ msg: String) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 40)).foregroundColor(.orange)
+            Text("無法載入公告").font(.headline)
+            Text(msg).font(.caption).foregroundColor(.secondary).multilineTextAlignment(.center)
+            Button {
+                Task { await viewModel.fetchAnnouncements() }
+            } label: {
+                Label("重試", systemImage: "arrow.clockwise")
+                    .padding(.horizontal, 24).padding(.vertical, 10)
+                    .background(Color.blue).foregroundColor(.white)
+                    .clipShape(Capsule())
+            }
+        }
+        .padding(32)
+        .frame(maxWidth: .infinity)
+    }
+
+    private var emptyView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "newspaper").font(.system(size: 40)).foregroundColor(.secondary)
+            Text("沒有公告").foregroundColor(.secondary)
+        }
+        .padding(32)
+        .frame(maxWidth: .infinity)
+    }
+
+    private func categoryColor(_ cat: AnnouncementCategory) -> Color {
+        switch cat {
+        case .all:         return .blue
+        case .academic:    return .purple
+        case .recruitment: return .orange
+        case .activity:    return .green
+        }
+    }
+}
+
+// MARK: - 單筆公告卡片
+struct AnnouncementCardRow: View {
+    let item: AnnouncementItem
+
+    private var accentColor: Color {
+        switch item.category {
+        case .all:         return .blue
+        case .academic:    return .purple
+        case .recruitment: return .orange
+        case .activity:    return .green
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 0) {
+            // 左側色條
+            Rectangle()
+                .fill(accentColor)
+                .frame(width: 4)
+
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(item.title)
+                        .font(.subheadline).fontWeight(.semibold)
+                        .lineLimit(2)
+                        .foregroundColor(.primary)
+                    HStack(spacing: 8) {
+                        Text(item.date)
+                            .font(.caption2).foregroundColor(.secondary)
+                        Text(item.category.rawValue)
+                            .font(.caption2).padding(.horizontal, 6).padding(.vertical, 2)
+                            .background(accentColor.opacity(0.12))
+                            .foregroundColor(accentColor)
+                            .clipShape(Capsule())
+                    }
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption).foregroundColor(.secondary)
+            }
+            .padding(14)
+        }
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
     }
 }
 

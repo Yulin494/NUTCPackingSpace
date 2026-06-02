@@ -2,24 +2,24 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
-    
+
     // 用於控制是否顯示初始引導頁面
     @AppStorage("hasShownOnboarding") var hasShownOnboarding: Bool = false
     // 用於控制是否開啟 1 公里範圍自動通知
     @AppStorage("isMonitoringEnabled") var isMonitoringEnabled: Bool = true
-    
+
+    // Optional binding for sheet presentation mode
+    var isPresented: Binding<Bool>?
+
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("一般設定")) {
-                    // 切換開關：開啟或關閉 1 公里自動通知
                     Toggle("一公里自動通知", isOn: $isMonitoringEnabled)
                         .onChange(of: isMonitoringEnabled) { newValue in
-                            // 當開關改變時，呼叫 LocationService 更新監控狀態
                             LocationService.shared.updateMonitoring(enabled: newValue)
                         }
-                    
-                    // 按鈕：重設引導頁面狀態，並關閉設定頁面以顯示引導
+
                     Button(action: {
                         hasShownOnboarding = false
                         dismiss()
@@ -32,7 +32,7 @@ struct SettingsView: View {
                     }
                     .foregroundColor(.primary)
                 }
-                
+
                 Section(header: Text("關於")) {
                     HStack {
                         Text("版本")
@@ -43,13 +43,6 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("設定")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("完成") {
-                        dismiss()
-                    }
-                }
-            }
         }
     }
 }

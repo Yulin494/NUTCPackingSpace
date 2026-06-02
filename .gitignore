@@ -88,3 +88,6 @@ Temporary Items
 .github/
 
 specs/
+.agents/
+.claude/
+skills-lock.json

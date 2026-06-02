@@ -138,34 +138,43 @@ struct CourseRow: View {
 
     var body: some View {
         HStack(spacing: 6) {
+            // 左側色條
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color(hex: course.color) ?? .blue)
                 .frame(width: 3)
 
+            // 課程資訊（左側主體）
             VStack(alignment: .leading, spacing: 1) {
                 Text(course.name)
                     .font(.system(size: 12, weight: .semibold))
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
 
-                HStack(spacing: 4) {
-                    Text("第\(course.startPeriod)-\(course.endPeriod)節")
-                        .font(.system(size: 10))
-                        .foregroundStyle(.secondary)
-                    Text(course.room)
-                        .font(.system(size: 10))
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
+                // 節次 + 教室：合併一行，字小一點
+                Text(periodRoomLabel)
+                    .font(.system(size: 9))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
 
-            Spacer()
+            Spacer(minLength: 4)
 
+            // 右側：開始時間（固定寬度避免壓縮左側）
             if let time = course.startTime {
-                Text(String(format: "%02d:%02d", time.hour, time.minute))
-                    .font(.system(size: 10, design: .monospaced))
+                Text(String(format: "%d:%02d", time.hour, time.minute))
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundStyle(.secondary)
+                    .fixedSize()
             }
         }
+    }
+
+    private var periodRoomLabel: String {
+        let period = course.startPeriod == course.endPeriod
+            ? "第\(course.startPeriod)節"
+            : "第\(course.startPeriod)-\(course.endPeriod)節"
+        let room = course.room.isEmpty ? "" : "  \(course.room)"
+        return period + room
     }
 }
 

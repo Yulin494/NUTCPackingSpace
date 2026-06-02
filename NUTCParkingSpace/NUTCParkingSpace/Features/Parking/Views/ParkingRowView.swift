@@ -8,7 +8,7 @@ struct ParkingRowView: View {
             VStack(alignment: .leading) {
                 Text(parkingLot.name)
                     .font(.headline)
-                Text("更新時間: \(parkingLot.lastUpdated.formatted(date: .omitted, time: .standard))")
+                Text("更新時間：\(parkingLot.lastUpdated.formatted(.dateTime.hour().minute().locale(Locale(identifier: "zh_Hant_TW"))))")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

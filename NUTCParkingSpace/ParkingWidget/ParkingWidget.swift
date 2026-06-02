@@ -135,7 +135,7 @@ struct ParkingWidgetEntryView: View {
                     // Assuming RefreshIntent exists in the project scope.
                      Button(intent: RefreshIntent()) {
                         HStack(spacing: 2) {
-                            Text(entry.date, style: .time)
+                            Text(entry.date.formatted(.dateTime.hour().minute().locale(Locale(identifier: "zh_Hant_TW"))))
                                 .font(.system(size: 8))
                                 .monospacedDigit()
                                 .foregroundStyle(.secondary)

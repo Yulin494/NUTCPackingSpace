@@ -22,7 +22,7 @@ struct AcademicCalendarView: View {
                     .font(.headline)
                     .foregroundColor(isPast(event.date) ? .secondary : .primary)
                 HStack {
-                    Text(event.date.formatted(date: .abbreviated, time: .omitted))
+                    Text(event.date.formatted(.dateTime.month().day().locale(Locale(identifier: "zh_Hant_TW"))))
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()

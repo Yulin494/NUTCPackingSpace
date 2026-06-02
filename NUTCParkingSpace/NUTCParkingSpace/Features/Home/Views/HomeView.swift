@@ -82,7 +82,7 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(greeting)，同學 \(greetingEmoji)")
                     .font(.largeTitle).bold()
-                Text(Date().formatted(date: .long, time: .omitted))
+                Text(Date().formatted(.dateTime.year().month().day().weekday(.wide).locale(Locale(identifier: "zh_Hant_TW"))))
                     .font(.subheadline).foregroundColor(.secondary)
             }
             Spacer()

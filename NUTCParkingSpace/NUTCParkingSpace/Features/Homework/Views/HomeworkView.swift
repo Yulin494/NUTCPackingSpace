@@ -235,7 +235,7 @@ struct HomeworkCard: View {
                 // 右側到期資訊
                 VStack(alignment: .trailing, spacing: 4) {
                     dueLabel
-                    Text(homework.dueDate.formatted(date: .abbreviated, time: .omitted))
+                    Text(homework.dueDate.formatted(.dateTime.month().day().locale(Locale(identifier: "zh_Hant_TW"))))
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }

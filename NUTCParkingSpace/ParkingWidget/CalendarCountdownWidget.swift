@@ -162,9 +162,10 @@ struct CalendarCountdownWidgetView: View {
                             .font(.system(size: 11))
                             .lineLimit(1)
                         Spacer()
-                        Text(event.date, style: .date)
+                        Text(chineseShortDate(event.date))
                             .font(.system(size: 10))
                             .foregroundStyle(.secondary)
+                            .fixedSize()
                     }
                 }
             }
@@ -176,6 +177,13 @@ struct CalendarCountdownWidgetView: View {
 
     private func daysLabel(_ days: Int) -> String {
         days == 0 ? "今" : "\(days)"
+    }
+
+    private func chineseShortDate(_ date: Date) -> String {
+        let cal = Calendar.current
+        let m = cal.component(.month, from: date)
+        let d = cal.component(.day, from: date)
+        return "\(m)/\(d)"
     }
 
     private func accentColor(for type: String) -> Color {

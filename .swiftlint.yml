@@ -1,0 +1,15 @@
+# SwiftLint 設定
+# 文件:https://github.com/realm/SwiftLint
+# GitHub macOS runner 已內建 SwiftLint,CI 上會自動執行。
+# 本機執行:brew install swiftlint && swiftlint
+
+excluded:
+  - .build
+  - build
+  - DerivedData
+  - SourcePackages
+  - NUTCParkingShared/.build
+
+disabled_rules:
+  - todo                 # 允許 TODO/FIXME 註解不報 warning
+  - trailing_whitespace  # 尾端空白交給編輯器/格式化工具處理

@@ -228,7 +228,7 @@ final class CommuteManagerTests: XCTestCase {
         // 注意：如果之前有測試留下狀態，這可能失敗，所以先停止
         commuteManager.stopCommuting()
         XCTAssertFalse(commuteManager.isCommuting)
-        XCTAssertNil(commuteManager.currentLot)
+        XCTAssertNil(commuteManager.trackingDescription)
     }
     
     func testStopCommutingWhenNotStarted() throws {

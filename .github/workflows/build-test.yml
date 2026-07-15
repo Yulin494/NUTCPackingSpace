@@ -87,6 +87,31 @@ jobs:
           path: build/TestResults.xcresult
           retention-days: 7
 
+  # Shared package 純邏輯測試:用 swift test 在 macOS host 上跑,不需模擬器,快又穩定
+  package-tests:
+    name: Package Unit Tests (swift test)
+    runs-on: macos-15
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Swift Version
+        run: swift --version
+
+      - name: Cache SPM
+        uses: actions/cache@v4
+        with:
+          path: NUTCParkingShared/.build
+          key: ${{ runner.os }}-swiftpm-${{ hashFiles('NUTCParkingShared/**/*.swift', 'NUTCParkingShared/Package.swift') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftpm-
+
+      - name: Run Package Tests
+        working-directory: NUTCParkingShared
+        run: swift test
+
   lint:
     name: SwiftLint
     runs-on: macos-15

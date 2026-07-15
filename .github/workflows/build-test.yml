@@ -75,12 +75,21 @@ jobs:
         run: |
           set -o pipefail
           FMT="cat"; command -v xcbeautify >/dev/null 2>&1 && FMT="xcbeautify --renderer github-actions"
+          # 跳過依賴網路(NUTC 校網 / 天氣 API)的整合與效能測試 —— 在 CI runner 上會逾時而不穩定。
+          # 純邏輯已由 NUTCParkingShared 的 swift test 涵蓋;此處只跑確定性的 app 測試
+          # (ParkingLotTests、CommuteManagerTests 與 UITests)。
+          # 這些整合測試仍會在 build-for-testing 階段被編譯(保留編譯檢查),只是不執行。
           xcodebuild test-without-building \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath build/DerivedData \
             -resultBundlePath build/TestResults.xcresult \
+            -skip-testing:NUTCParkingSpaceTests/IntegrationTests \
+            -skip-testing:NUTCParkingSpaceTests/ParkingDataServiceTests \
+            -skip-testing:NUTCParkingSpaceTests/HTMLParsingTests \
+            -skip-testing:NUTCParkingSpaceTests/PerformanceTests \
+            -skip-testing:NUTCParkingSpaceTests/ParkingListViewModelTests \
             | $FMT
 
       - name: Upload Test Results

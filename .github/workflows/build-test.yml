@@ -1,0 +1,105 @@
+# Build and Test Workflow
+# 在 PR 與 push 到 main/develop 時,於 iOS Simulator 上跑 build + test,並執行 SwiftLint。
+#
+# 專案結構備註:
+#   - Xcode 專案不在 repo root,位於 NUTCParkingSpace/NUTCParkingSpace.xcodeproj
+#   - 主 scheme「NUTCParkingSpace」archive/build 時會一併建置 Widget / watchOS 內容
+#   - 依賴為純 SPM(local package NUTCParkingShared),無外部 remote 套件
+
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# 同一分支有新 push 時取消進行中的舊 run
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT: "NUTCParkingSpace/NUTCParkingSpace.xcodeproj"
+  SCHEME: "NUTCParkingSpace"
+  # 不寫死 Xcode 版本:watchOS 26 / iOS 18.4 需要較新 Xcode,
+  # 寫死路徑在 runner image 更新後易失效,改用 runner 預設(最新穩定版)。
+
+jobs:
+  build-and-test:
+    name: Build and Test (iOS)
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode Version
+        run: xcodebuild -version
+
+      - name: List Available Simulators
+        run: xcrun simctl list devices available
+
+      - name: Cache Swift Packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/org.swift.swiftpm
+            SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved', '**/Package.swift') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Resolve Package Dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -clonedSourcePackagesDirPath SourcePackages
+
+      - name: Build for Testing (iOS)
+        run: |
+          xcodebuild build-for-testing \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath build/DerivedData \
+            -clonedSourcePackagesDirPath SourcePackages \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcbeautify --renderer github-actions
+
+      - name: Run Tests (iOS)
+        run: |
+          xcodebuild test-without-building \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath build/DerivedData \
+            -resultBundlePath build/TestResults.xcresult \
+            | xcbeautify --renderer github-actions
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: build/TestResults.xcresult
+          retention-days: 7
+
+  lint:
+    name: SwiftLint
+    runs-on: macos-15
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run SwiftLint
+        run: |
+          if command -v swiftlint &> /dev/null; then
+            swiftlint lint --reporter github-actions-logging
+          else
+            echo "SwiftLint not installed, skipping"
+          fi

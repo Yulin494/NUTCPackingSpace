@@ -1,0 +1,190 @@
+# TestFlight Deployment Workflow(骨架 —— 目前僅供手動觸發)
+#
+# ⚠️ 尚未可用:此 workflow 需要簽署憑證與 App Store Connect API Key 才能真正跑通。
+#    在補齊下列 GitHub Secrets 前,手動觸發會在「Install Certificate / Build Archive」階段失敗,
+#    這是預期行為。目前刻意「只保留 workflow_dispatch」,不掛 push 觸發,
+#    以免每次 merge 到 main 就自動跑出失敗紅叉。
+#
+# 之後要啟用時的待辦:
+#   1. 在 repo Settings → Secrets and variables → Actions 補上:
+#        - APP_STORE_CONNECT_API_KEY_ID
+#        - APP_STORE_CONNECT_API_ISSUER_ID
+#        - APP_STORE_CONNECT_API_KEY_CONTENT   (.p8 內容)
+#        - CERTIFICATE_P12                      (base64 後的 distribution .p12)
+#        - CERTIFICATE_PASSWORD
+#        - PROVISIONING_PROFILE                 (base64 後的 distribution profile)
+#      注意:本專案有 4 個 bundle id(主 App / iOS Widget / watchOS App / watchOS Widget),
+#      每個都需要各自的 distribution provisioning profile。若要一次上傳含 Widget/Watch 的完整版本,
+#      需為每個 bundle id 各匯入一份 profile(建議屆時改用 fastlane match 統一管理)。
+#   2. 將下方 ExportOptions.plist 的 YOUR_PROFILE_NAME 換成實際 distribution profile 名稱。
+#   3. 若要恢復自動發布,於 on: 加回 push: branches: [main]。
+
+name: Deploy to TestFlight
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_build:
+        description: 'Increment build number'
+        required: false
+        default: true
+        type: boolean
+
+# 同時只允許一個部署
+concurrency:
+  group: testflight-deployment
+  cancel-in-progress: false
+
+env:
+  PROJECT: "NUTCParkingSpace/NUTCParkingSpace.xcodeproj"
+  SCHEME: "NUTCParkingSpace"
+  PRODUCT_NAME: "NUTCParkingSpace"
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 完整歷史,供 build number 使用
+
+      - name: Show Xcode Version
+        run: xcodebuild -version
+
+      - name: Cache Swift Packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/org.swift.swiftpm
+            SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved', '**/Package.swift') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      # 安裝簽署憑證
+      - name: Install Certificate
+        env:
+          CERTIFICATE_P12: ${{ secrets.CERTIFICATE_P12 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/signing.keychain-db
+          KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          echo "$CERTIFICATE_P12" | base64 --decode > $RUNNER_TEMP/certificate.p12
+          security import $RUNNER_TEMP/certificate.p12 \
+            -P "$CERTIFICATE_PASSWORD" \
+            -A -t cert -f pkcs12 \
+            -k $KEYCHAIN_PATH
+
+          security set-key-partition-list -S apple-tool:,apple: \
+            -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> $GITHUB_ENV
+
+      # 安裝 provisioning profile
+      - name: Install Provisioning Profile
+        env:
+          PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROVISIONING_PROFILE" | base64 --decode \
+            > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
+
+      # 設定 App Store Connect API
+      - name: Setup App Store Connect API
+        env:
+          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: |
+          mkdir -p ~/.private_keys
+          echo "$API_KEY_CONTENT" > ~/.private_keys/AuthKey_$API_KEY_ID.p8
+
+      # 產生 build number(以日期時間為基礎)
+      - name: Increment Build Number
+        if: ${{ inputs.bump_build != false }}
+        run: |
+          BUILD_NUMBER=$(date +%Y%m%d%H%M)
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          # 如需寫入專案:agvtool new-version -all $BUILD_NUMBER
+
+      # 建立 archive
+      - name: Build Archive
+        run: |
+          xcodebuild archive \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -archivePath build/$PRODUCT_NAME.xcarchive \
+            -destination 'generic/platform=iOS' \
+            -clonedSourcePackagesDirPath SourcePackages \
+            CODE_SIGN_STYLE=Manual \
+            | xcbeautify --renderer github-actions
+
+      # 產生 ExportOptions.plist
+      - name: Create Export Options
+        run: |
+          cat > build/ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store</string>
+            <key>destination</key>
+            <string>upload</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.yulin494.NUTCParkingSpace</key>
+              <string>YOUR_PROFILE_NAME</string>
+              <!-- TODO: 若含 Widget/Watch,需為以下 bundle id 各補一行 profile 對應:
+                   com.yulin494.NUTCParkingSpace.ParkingWidget
+                   com.yulin494.NUTCParkingSpace.watchkitapp
+                   com.yulin494.NUTCParkingSpace.watchkitapp.ParkingWatchWidgetExtension -->
+            </dict>
+          </dict>
+          </plist>
+          EOF
+
+      # 匯出 IPA
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/$PRODUCT_NAME.xcarchive \
+            -exportPath build/Export \
+            -exportOptionsPlist build/ExportOptions.plist \
+            | xcbeautify --renderer github-actions
+
+      # 上傳 TestFlight
+      - name: Upload to TestFlight
+        env:
+          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+        run: |
+          xcrun altool --upload-app \
+            --type ios \
+            --file "build/Export/$PRODUCT_NAME.ipa" \
+            --apiKey "$API_KEY_ID" \
+            --apiIssuer "$API_ISSUER_ID"
+
+      # 清理
+      - name: Cleanup Keychain
+        if: always()
+        run: |
+          security delete-keychain $KEYCHAIN_PATH || true
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: build/Export/${{ env.PRODUCT_NAME }}.ipa
+          retention-days: 30

@@ -84,9 +84,6 @@ Temporary Items
 # SpecKit
 .specify/
 
-# GitHub
-.github/
-
 specs/
 .agents/
 .claude/

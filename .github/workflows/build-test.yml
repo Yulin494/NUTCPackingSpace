@@ -60,6 +60,8 @@ jobs:
 
       - name: Build for Testing (iOS)
         run: |
+          set -o pipefail   # 明示 pipefail:確保 xcodebuild 失敗會讓 step 失敗,不被格式化工具掩蓋
+          FMT="cat"; command -v xcbeautify >/dev/null 2>&1 && FMT="xcbeautify --renderer github-actions"
           xcodebuild build-for-testing \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
@@ -67,17 +69,19 @@ jobs:
             -derivedDataPath build/DerivedData \
             -clonedSourcePackagesDirPath SourcePackages \
             CODE_SIGNING_ALLOWED=NO \
-            | xcbeautify --renderer github-actions
+            | $FMT
 
       - name: Run Tests (iOS)
         run: |
+          set -o pipefail
+          FMT="cat"; command -v xcbeautify >/dev/null 2>&1 && FMT="xcbeautify --renderer github-actions"
           xcodebuild test-without-building \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath build/DerivedData \
             -resultBundlePath build/TestResults.xcresult \
-            | xcbeautify --renderer github-actions
+            | $FMT
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4

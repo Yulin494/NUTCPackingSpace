@@ -85,8 +85,8 @@ jobs:
             -k $KEYCHAIN_PATH
 
           security set-key-partition-list -S apple-tool:,apple: \
-            -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
+            -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
 
           echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> $GITHUB_ENV
 
@@ -119,6 +119,8 @@ jobs:
       # 建立 archive
       - name: Build Archive
         run: |
+          set -o pipefail
+          FMT="cat"; command -v xcbeautify >/dev/null 2>&1 && FMT="xcbeautify --renderer github-actions"
           xcodebuild archive \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
@@ -126,7 +128,7 @@ jobs:
             -destination 'generic/platform=iOS' \
             -clonedSourcePackagesDirPath SourcePackages \
             CODE_SIGN_STYLE=Manual \
-            | xcbeautify --renderer github-actions
+            | $FMT
 
       # 產生 ExportOptions.plist
       - name: Create Export Options
@@ -158,11 +160,13 @@ jobs:
       # 匯出 IPA
       - name: Export IPA
         run: |
+          set -o pipefail
+          FMT="cat"; command -v xcbeautify >/dev/null 2>&1 && FMT="xcbeautify --renderer github-actions"
           xcodebuild -exportArchive \
             -archivePath build/$PRODUCT_NAME.xcarchive \
             -exportPath build/Export \
             -exportOptionsPlist build/ExportOptions.plist \
-            | xcbeautify --renderer github-actions
+            | $FMT
 
       # 上傳 TestFlight
       - name: Upload to TestFlight

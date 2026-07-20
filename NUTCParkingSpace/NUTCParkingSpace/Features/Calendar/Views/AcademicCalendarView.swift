@@ -15,27 +15,43 @@ struct AcademicCalendarView: View {
 
     private let today = Calendar.current.startOfDay(for: Date())
 
+    // 第一個「今天或之後」的事件，用於開啟時自動捲動定位
+    private var firstUpcomingID: AcademicEvent.ID? {
+        events.first { !isPast($0.date) }?.id
+    }
+
     var body: some View {
-        List(events) { event in
-            VStack(alignment: .leading, spacing: 4) {
-                Text(event.title)
-                    .font(.headline)
-                    .foregroundColor(isPast(event.date) ? .secondary : .primary)
-                HStack {
-                    Text(event.date.formatted(.dateTime.month().day().locale(Locale(identifier: "zh_Hant_TW"))))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    typeBadge(event.type)
-                    if !isPast(event.date) {
-                        let days = daysUntil(event.date)
-                        Text(days == 0 ? "今天" : "\(days) 天後")
-                            .font(.caption2)
-                            .foregroundColor(days <= 3 ? .red : .blue)
+        ScrollViewReader { proxy in
+            List(events) { event in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(event.title)
+                        .font(.headline)
+                        .foregroundColor(isPast(event.date) ? .secondary : .primary)
+                    HStack {
+                        Text(event.date.formatted(.dateTime.month().day().locale(Locale(identifier: "zh_Hant_TW"))))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        typeBadge(event.type)
+                        if !isPast(event.date) {
+                            let days = daysUntil(event.date)
+                            Text(days == 0 ? "今天" : "\(days) 天後")
+                                .font(.caption2)
+                                .foregroundColor(days <= 3 ? .red : .blue)
+                        }
+                    }
+                }
+                .opacity(isPast(event.date) ? 0.5 : 1)
+                .id(event.id)
+            }
+            .onAppear {
+                // 開啟時直接跳到下一個即將到來的事件，不必滑過一整年過期項目
+                if let target = firstUpcomingID {
+                    DispatchQueue.main.async {
+                        withAnimation { proxy.scrollTo(target, anchor: .top) }
                     }
                 }
             }
-            .opacity(isPast(event.date) ? 0.5 : 1)
         }
         .navigationTitle("學術行事曆")
         .toolbar {

@@ -2,7 +2,7 @@
 //  AcademicCalendarData.swift
 //  NUTCParkingSpace
 //
-//  資料來源：國立臺中科技大學114學年度行事曆（教務處核備版）
+//  資料來源：國立臺中科技大學114、115學年度行事曆（教務處核備版）
 //
 
 import Foundation
@@ -54,6 +54,45 @@ struct AcademicCalendarData {
             AcademicEvent(title: "期末考開始（114-2）", date: date(2026, 6, 22), type: .exam),
             AcademicEvent(title: "期末考結束（114-2）", date: date(2026, 6, 27), type: .exam),
             AcademicEvent(title: "114-2 學期結束", date: date(2026, 7, 31), type: .general),
+
+            // MARK: - 115-1（2026 第一學期）
+            AcademicEvent(title: "115-1 開學日", date: date(2026, 9, 7), type: .general),
+            AcademicEvent(title: "加退選開始（115-1）", date: date(2026, 9, 7), type: .registration),
+            AcademicEvent(title: "加退選截止（115-1）", date: date(2026, 9, 18), type: .registration),
+            AcademicEvent(title: "中秋節放假", date: date(2026, 9, 25), type: .holiday),
+            AcademicEvent(title: "教師節放假", date: date(2026, 9, 28), type: .holiday),
+            AcademicEvent(title: "國慶日補假", date: date(2026, 10, 9), type: .holiday),
+            AcademicEvent(title: "國慶日放假", date: date(2026, 10, 10), type: .holiday),
+            AcademicEvent(title: "臺灣光復暨金門古寧頭大捷紀念日放假", date: date(2026, 10, 25), type: .holiday),
+            AcademicEvent(title: "臺灣光復暨金門古寧頭大捷紀念日補假", date: date(2026, 10, 26), type: .holiday),
+            AcademicEvent(title: "期中考開始（115-1）", date: date(2026, 11, 2), type: .exam),
+            AcademicEvent(title: "期中考結束（115-1）", date: date(2026, 11, 7), type: .exam),
+            AcademicEvent(title: "校慶", date: date(2026, 12, 1), type: .general),
+            AcademicEvent(title: "行憲紀念日放假", date: date(2026, 12, 25), type: .holiday),
+            AcademicEvent(title: "開國紀念日放假", date: date(2027, 1, 1), type: .holiday),
+            AcademicEvent(title: "期末考開始（115-1）", date: date(2027, 1, 4), type: .exam),
+            AcademicEvent(title: "期末考結束（115-1）", date: date(2027, 1, 9), type: .exam),
+            AcademicEvent(title: "115-1 學期結束", date: date(2027, 1, 31), type: .general),
+
+            // MARK: - 115-2（2027 第二學期）
+            AcademicEvent(title: "115-2 開學日", date: date(2027, 2, 22), type: .general),
+            AcademicEvent(title: "加退選開始（115-2）", date: date(2027, 2, 22), type: .registration),
+            AcademicEvent(title: "和平紀念日放假", date: date(2027, 2, 28), type: .holiday),
+            AcademicEvent(title: "和平紀念日補假", date: date(2027, 3, 1), type: .holiday),
+            AcademicEvent(title: "加退選截止（115-2）", date: date(2027, 3, 5), type: .registration),
+            AcademicEvent(title: "校慶補假", date: date(2027, 4, 2), type: .holiday),
+            AcademicEvent(title: "兒童節放假", date: date(2027, 4, 4), type: .holiday),
+            AcademicEvent(title: "清明節放假", date: date(2027, 4, 5), type: .holiday),
+            AcademicEvent(title: "兒童節清明節補假", date: date(2027, 4, 6), type: .holiday),
+            AcademicEvent(title: "期中考開始（115-2）", date: date(2027, 4, 19), type: .exam),
+            AcademicEvent(title: "期中考結束（115-2）", date: date(2027, 4, 24), type: .exam),
+            AcademicEvent(title: "勞動節補假", date: date(2027, 4, 30), type: .holiday),
+            AcademicEvent(title: "勞動節放假", date: date(2027, 5, 1), type: .holiday),
+            AcademicEvent(title: "端午節放假", date: date(2027, 6, 9), type: .holiday),
+            AcademicEvent(title: "畢業典禮", date: date(2027, 6, 11), type: .general),
+            AcademicEvent(title: "期末考開始（115-2）", date: date(2027, 6, 21), type: .exam),
+            AcademicEvent(title: "期末考結束（115-2）", date: date(2027, 6, 26), type: .exam),
+            AcademicEvent(title: "115-2 學期結束", date: date(2027, 7, 31), type: .general),
         ].sorted { $0.date < $1.date }
     }
 }

@@ -22,7 +22,9 @@ public actor ParkingFetchService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.timeoutInterval = 60
+        // 學校主機 TTFB 冷啟動最慢約 19 秒；設 30 秒讓卡住的請求更快失敗可重試，
+        // 又留足夠餘裕給正常但偏慢的回應。
+        request.timeoutInterval = 30
         
         request.addValue("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", forHTTPHeaderField: "Accept")
         request.addValue("zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7", forHTTPHeaderField: "Accept-Language")

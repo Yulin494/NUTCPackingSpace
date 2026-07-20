@@ -5,13 +5,21 @@ import NUTCParkingShared
 
 class ParkingDataService: ObservableObject {
     static let shared = ParkingDataService()
-    
+
     @Published var parkingLots: [ParkingLot] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
-    
+
     private let campusCenter = CLLocationCoordinate2D(latitude: 24.149691, longitude: 120.683974)
-    
+
+    private init() {
+        // 先載入上次快取，讓停車頁一進來就有內容可看（附「更新時間」），
+        // 不必空等學校伺服器回應（其 TTFB 常需 2~18 秒）。
+        if let cached = SharedParkingCache.load() {
+            self.parkingLots = cached.map { ParkingLot(data: $0) }
+        }
+    }
+
     // Convert async call to completion handler for compatibility with existing code
     func fetchParkingData(completion: (([ParkingLot]) -> Void)? = nil) {
         // Set loading state on main thread

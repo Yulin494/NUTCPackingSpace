@@ -2,10 +2,18 @@ import Foundation
 
 public actor ParkingFetchService {
     public static let shared = ParkingFetchService()
-    
+
     private let urlString = "https://apps.nutc.edu.tw/getParking/showParkingData.php"
     private let campusCenterLat = 24.149691
     private let campusCenterLon = 120.683974
+
+    // apps.nutc.edu.tw 的 TLS handshake 沒有送出完整憑證鏈，
+    // 需要自訂 delegate 補上遺漏的中繼憑證，見 NUTCServerTrustDelegate。
+    private let session = URLSession(
+        configuration: .default,
+        delegate: NUTCServerTrustDelegate(),
+        delegateQueue: nil
+    )
     
     public func fetchParkingData() async throws -> [ParkingLotData] {
         guard let url = URL(string: urlString) else {
@@ -27,7 +35,7 @@ public actor ParkingFetchService {
         request.addValue("1", forHTTPHeaderField: "Upgrade-Insecure-Requests")
         request.addValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
             throw URLError(.badServerResponse)

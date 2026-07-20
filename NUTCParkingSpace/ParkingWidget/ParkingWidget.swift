@@ -32,40 +32,31 @@ struct Provider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<ParkingEntry>) -> ()) {
         // 抓取即時資料
         Task {
-            do {
-                let sharedLots = try await ParkingFetchService.shared.fetchParkingData()
-                
-                // Cache data
-                SharedParkingCache.save(sharedLots)
-                
-                let lots = sharedLots.map { ParkingLot(data: $0) }
-                let currentDate = Date()
-                
-                // 邏輯處理：只顯示機車停車場 (.motorcycle) 並依剩餘車位排序 (由多到少)
-                let filteredLots = lots
+            let currentDate = Date()
+            let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+
+            // 只顯示機車停車場並依剩餘車位排序（由多到少）
+            func makeEntry(from lots: [ParkingLot], error: String?) -> ParkingEntry {
+                let filtered = lots
                     .filter { $0.type == .motorcycle }
                     .sorted { $0.availableCount > $1.availableCount }
-                
-                let entry = ParkingEntry(
-                    date: currentDate,
-                    parkingLots: filteredLots,
-                    error: nil
-                )
-                
-                let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
-                let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                completion(timeline)
-                
+                // 有資料就不顯示錯誤橫幅
+                return ParkingEntry(date: currentDate,
+                                    parkingLots: filtered,
+                                    error: filtered.isEmpty ? error : nil)
+            }
+
+            do {
+                let sharedLots = try await ParkingFetchService.shared.fetchParkingData()
+                SharedParkingCache.save(sharedLots)
+                let entry = makeEntry(from: sharedLots.map { ParkingLot(data: $0) }, error: nil)
+                completion(Timeline(entries: [entry], policy: .after(refreshDate)))
             } catch {
-                let currentDate = Date()
-                let entry = ParkingEntry(
-                    date: currentDate,
-                    parkingLots: [],
-                    error: "連線失敗: \(error.localizedDescription)"
-                )
-                let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
-                let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
-                completion(timeline)
+                // 學校主機慢或逾時（小工具執行時間有限）時，退回上次快取，
+                // 而非顯示空白／錯誤，讓小工具至少呈現最後已知車位。
+                let cachedLots = (SharedParkingCache.load() ?? []).map { ParkingLot(data: $0) }
+                let entry = makeEntry(from: cachedLots, error: "暫時無法更新")
+                completion(Timeline(entries: [entry], policy: .after(refreshDate)))
             }
         }
     }

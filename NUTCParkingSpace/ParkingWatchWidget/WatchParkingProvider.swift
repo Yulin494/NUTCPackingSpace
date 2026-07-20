@@ -28,7 +28,11 @@ struct WatchParkingProvider: TimelineProvider {
                 
                 completion(timeline)
             } catch {
-                let entry = WatchParkingEntry(date: Date(), parkingLots: [], error: "無法取得資料")
+                // 連線失敗／逾時退回上次快取，避免手錶小工具直接空白
+                let cached = SharedParkingCache.load() ?? []
+                let entry = WatchParkingEntry(date: Date(),
+                                              parkingLots: cached,
+                                              error: cached.isEmpty ? "無法取得資料" : nil)
                 let refreshDate = Calendar.current.date(byAdding: .minute, value: 5, to: Date())!
                 let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
                 completion(timeline)

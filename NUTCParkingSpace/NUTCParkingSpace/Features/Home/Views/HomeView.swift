@@ -73,6 +73,21 @@ struct HomeView: View {
             }
             .background(Color(UIColor.systemGroupedBackground))
             .navigationBarHidden(true)
+            .refreshable { await refresh() }
+            .task { await refresh() }
+        }
+    }
+
+    // MARK: - Data refresh
+
+    private func refresh() async {
+        // 首頁不再只讀快取；主動抓取天氣與車位，首次啟動也能有內容
+        if let w = try? await WeatherFetchService.shared.fetch() {
+            weather = w
+        }
+        if let lots = try? await ParkingFetchService.shared.fetchParkingData() {
+            parkingLots = lots
+            SharedParkingCache.save(lots)   // 讓 Widget / 其他頁共用最新資料
         }
     }
 
@@ -255,11 +270,13 @@ struct HomeView: View {
     // MARK: - Today Courses
     private var todayCoursesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(
-                title: "今日課程",
-                actionLabel: "完整課表",
-                action: nil
-            )
+            HStack {
+                Text("今日課程").font(.title3).bold()
+                Spacer()
+                NavigationLink("完整課表", destination: ScheduleView())
+                    .font(.subheadline)
+                    .foregroundColor(.blue)
+            }
 
             if todayCourses.isEmpty {
                 NUTCCard {

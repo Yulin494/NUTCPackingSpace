@@ -37,8 +37,17 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
     }
     
     func requestPermissions() {
-        locationManager.requestAlwaysAuthorization()
-        
+        // 依 Apple 建議採漸進式請求：先要「使用期間」，
+        // 已授權使用期間後再升級為「永遠」，避免一開始就冷請求 Always。
+        switch locationManager.authorizationStatus {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            locationManager.requestAlwaysAuthorization()
+        default:
+            break
+        }
+
         // 同時請求通知權限
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
@@ -84,10 +93,16 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate, UN
         authorizationStatus = manager.authorizationStatus
         // 檢查使用者設定是否開啟監控 (從 UserDefaults 讀取)
         let isEnabled = UserDefaults.standard.bool(forKey: "isMonitoringEnabled")
-        
+
         // 只有在設定開啟且獲得授權時才開始監測
         if isEnabled && (manager.authorizationStatus == .authorizedAlways || manager.authorizationStatus == .authorizedWhenInUse) {
             startMonitoring()
+
+            // 已取得「使用期間」且使用者啟用自動通知時，升級為「永遠」，
+            // 讓離開 App 後仍能在接近校園時觸發區域通知。
+            if manager.authorizationStatus == .authorizedWhenInUse {
+                manager.requestAlwaysAuthorization()
+            }
         }
     }
     

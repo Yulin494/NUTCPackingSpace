@@ -1,13 +1,22 @@
 import UserNotifications
 import Foundation
 
+/// SwiftData 的 @Model（HomeworkItem）不是 Sendable，不應跨 actor 邊界傳遞。
+/// 通知服務改以這個純值型別快照為輸入，避免並發存取問題。
+struct HomeworkReminder: Sendable {
+    let title: String
+    let courseName: String
+    let dueDate: Date
+    let isCompleted: Bool
+}
+
 actor HomeworkNotificationService {
     static let shared = HomeworkNotificationService()
 
     private let center = UNUserNotificationCenter.current()
     private let idPrefix = "nutc.homework."
 
-    func reschedule(homeworks: [HomeworkItem]) async {
+    func reschedule(homeworks: [HomeworkReminder]) async {
         guard UserDefaults.standard.object(forKey: "homeworkNotificationsEnabled")
                 .map({ $0 as? Bool ?? true }) ?? true
         else {

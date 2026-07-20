@@ -67,15 +67,21 @@ struct CalendarExportService {
         var items: [ExportItem] = []
         let cal = Calendar.current
 
+        // 以「標題＋日期」為唯一鍵，避免跨學年同名節日（如「校慶」「教師節放假」）
+        // 被當成同一筆而漏掉其中一年。
+        func key(_ ev: AcademicEvent) -> String {
+            "\(ev.title)|\(ev.date.timeIntervalSince1970)"
+        }
+
         for event in events {
-            guard !consumed.contains(event.title) else { continue }
+            guard !consumed.contains(key(event)) else { continue }
 
             if event.title.contains("開始") {
                 // 把「開始」拿掉後，比對同樣去掉「結束」或「截止」的標題
                 let base = event.title.replacingOccurrences(of: "開始", with: "")
 
                 if let endEvent = events.first(where: { ev in
-                    !consumed.contains(ev.title) &&
+                    !consumed.contains(key(ev)) &&
                     ev.date >= event.date &&
                     (ev.title.replacingOccurrences(of: "結束", with: "") == base ||
                      ev.title.replacingOccurrences(of: "截止", with: "") == base)
@@ -88,8 +94,8 @@ struct CalendarExportService {
                         endDate:   cal.startOfDay(for: endEvent.date),
                         type: event.type.rawValue
                     ))
-                    consumed.insert(event.title)
-                    consumed.insert(endEvent.title)
+                    consumed.insert(key(event))
+                    consumed.insert(key(endEvent))
                     continue
                 }
             }
@@ -101,7 +107,7 @@ struct CalendarExportService {
                 endDate:   cal.startOfDay(for: event.date),
                 type: event.type.rawValue
             ))
-            consumed.insert(event.title)
+            consumed.insert(key(event))
         }
 
         return items

@@ -1,10 +1,23 @@
 import SwiftUI
+import NUTCParkingShared
 
 struct LibraryView: View {
     private let catalogURL = URL(string: "https://elib.nutc.edu.tw/")!
 
+    // 今天是否為行事曆上的國定假日（放假）
+    private var isHolidayToday: Bool {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        return SharedAcademicCalendar.events.contains {
+            $0.type == "放假" && cal.startOfDay(for: $0.date) == today
+        }
+    }
+
     // 是否在開放時間
     private var isOpenNow: Bool {
+        // 國定假日一律閉館
+        if isHolidayToday { return false }
+
         let cal = Calendar.current
         let now = Date()
         let weekday = cal.component(.weekday, from: now) // 1=Sun
@@ -128,26 +141,9 @@ struct LibraryView: View {
 
 struct LibraryCatalogView: View {
     let url: URL
-    @State private var isLoading = true
 
     var body: some View {
-        ZStack(alignment: .top) {
-            WebView(url: url, isLoading: $isLoading)
-            if isLoading {
-                ProgressView()
-                    .padding(8)
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(8)
-                    .padding(.top, 8)
-            }
-        }
-        .navigationTitle("館藏查詢")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Link(destination: url) { Image(systemName: "safari") }
-            }
-        }
+        WebPageContainer(url: url, navigationTitle: "館藏查詢")
     }
 }
 

@@ -12,6 +12,7 @@ import WidgetKit
 struct ScheduleView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var showAddCourse = false
+    @State private var courseToDelete: Course?
     @Query(sort: \Course.weekday) var courses: [Course]
 
     // 今天的 NUTC weekday (1=Mon..7=Sun)
@@ -61,7 +62,20 @@ struct ScheduleView: View {
                     LazyVStack(spacing: 10) {
                         ForEach(selectedDayCourses) { course in
                             CourseCard(course: course, periodStartTimes: periodStartTimes)
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        courseToDelete = course
+                                    } label: {
+                                        Label("刪除課程", systemImage: "trash")
+                                    }
+                                }
                         }
+
+                        Text("長按課程可刪除")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 4)
                     }
                 }
             }
@@ -81,8 +95,35 @@ struct ScheduleView: View {
         .sheet(isPresented: $showAddCourse) {
             AddCourseView(isPresented: $showAddCourse)
         }
+        .confirmationDialog(
+            "刪除課程",
+            isPresented: Binding(
+                get: { courseToDelete != nil },
+                set: { if !$0 { courseToDelete = nil } }
+            ),
+            presenting: courseToDelete
+        ) { course in
+            Button("刪除「\(course.name)」", role: .destructive) {
+                deleteCourse(course)
+            }
+            Button("取消", role: .cancel) { courseToDelete = nil }
+        } message: { course in
+            Text("確定要刪除「\(course.name)」嗎？此動作無法復原。")
+        }
         .onAppear { syncCache() }
         .onChange(of: courses.count) { syncCache() }
+    }
+
+    // MARK: - Delete
+
+    private func deleteCourse(_ course: Course) {
+        modelContext.delete(course)
+        try? modelContext.save()
+        courseToDelete = nil
+        // 刪除後 @Query 的 courses 會更新、count 改變並觸發
+        // onChange(of: courses.count) → syncCache()，
+        // 一併更新 Widget 快取與上課通知。此處不重複呼叫，
+        // 以免在 @Query 尚未刷新前寫入仍含已刪課程的舊資料。
     }
 
     // MARK: - Week Day Picker
@@ -277,8 +318,37 @@ struct AddCourseView: View {
     @State private var selectedWeekday = 1
     @State private var selectedStartPeriod = 1
     @State private var selectedEndPeriod = 1
+    @State private var selectedColor = AddCourseView.palette.first!
+    @State private var selectedSemester = AddCourseView.currentSemester
     @State private var showConflictAlert = false
     @State private var conflictMessage = ""
+
+    // 可選課程色票
+    static let palette = ["#007AFF", "#34C759", "#FF9500", "#FF3B30",
+                          "#AF52DE", "#5856D6", "#FF2D55", "#00C7BE"]
+
+    // 依現在日期推估的預設學期（例如 2026 下半年 → 115-1）
+    static var currentSemester: String {
+        let cal = Calendar.current
+        let now = Date()
+        let year = cal.component(.year, from: now)
+        let month = cal.component(.month, from: now)
+        // 台灣學年：8~1 月為第 1 學期，2~7 月為第 2 學期
+        let academicYear = (month >= 8 ? year : year - 1) - 1911
+        let term = (month >= 8 || month == 1) ? 1 : 2
+        return "\(academicYear)-\(term)"
+    }
+
+    private var semesterOptions: [String] {
+        let base = Self.currentSemester
+        let parts = base.split(separator: "-")
+        guard parts.count == 2, let y = Int(parts[0]), let t = Int(parts[1]) else { return [base] }
+        // 提供上一學期、本學期、下一學期
+        func label(_ y: Int, _ t: Int) -> String { "\(y)-\(t)" }
+        let prev = t == 1 ? label(y - 1, 2) : label(y, 1)
+        let next = t == 1 ? label(y, 2)     : label(y + 1, 1)
+        return [prev, base, next]
+    }
 
     var body: some View {
         NavigationStack {
@@ -306,6 +376,30 @@ struct AddCourseView: View {
                         ForEach(selectedStartPeriod...14, id: \.self) { period in
                             Text("第 \(period) 節").tag(period)
                         }
+                    }
+
+                    Picker("學期", selection: $selectedSemester) {
+                        ForEach(semesterOptions, id: \.self) { s in
+                            Text(s).tag(s)
+                        }
+                    }
+                }
+
+                Section(header: Text("顏色")) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 14) {
+                            ForEach(Self.palette, id: \.self) { hex in
+                                Circle()
+                                    .fill(Color(courseHex: hex) ?? .blue)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(
+                                        Circle().stroke(Color.primary,
+                                                        lineWidth: selectedColor == hex ? 3 : 0)
+                                    )
+                                    .onTapGesture { selectedColor = hex }
+                            }
+                        }
+                        .padding(.vertical, 4)
                     }
                 }
             }
@@ -358,7 +452,9 @@ struct AddCourseView: View {
             room: room,
             weekday: selectedWeekday,
             startPeriod: selectedStartPeriod,
-            endPeriod: selectedEndPeriod
+            endPeriod: selectedEndPeriod,
+            color: selectedColor,
+            semester: selectedSemester
         )
         modelContext.insert(course)
     }

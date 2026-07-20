@@ -1,8 +1,10 @@
 import SwiftUI
+import SwiftData
 import NUTCParkingShared
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
+    @Query(sort: \HomeworkItem.dueDate) private var homeworks: [HomeworkItem]
 
     @AppStorage("hasShownOnboarding")         var hasShownOnboarding: Bool = false
     @AppStorage("isMonitoringEnabled")         var isMonitoringEnabled: Bool = true
@@ -13,7 +15,7 @@ struct SettingsView: View {
     var isPresented: Binding<Bool>?
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 // MARK: 停車通知
                 Section(header: Text("停車通知")) {
@@ -42,6 +44,7 @@ struct SettingsView: View {
                 // MARK: 作業通知
                 Section(header: Text("作業通知")) {
                     Toggle("截止前一天提醒", isOn: $homeworkNotificationsEnabled)
+                        .onChange(of: homeworkNotificationsEnabled) { _ in rescheduleHomework() }
                 }
 
                 // MARK: 一般
@@ -76,6 +79,15 @@ struct SettingsView: View {
     private func rescheduleAll() {
         let courses = SharedScheduleCache.load()
         Task { await ScheduleNotificationService.shared.reschedule(courses: courses) }
+    }
+
+    private func rescheduleHomework() {
+        // 關閉時 reschedule 內部會依旗標移除所有作業通知；開啟時重新排程
+        let snapshot = homeworks.map {
+            HomeworkReminder(title: $0.title, courseName: $0.courseName,
+                             dueDate: $0.dueDate, isCompleted: $0.isCompleted)
+        }
+        Task { await HomeworkNotificationService.shared.reschedule(homeworks: snapshot) }
     }
 }
 

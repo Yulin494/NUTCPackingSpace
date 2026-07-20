@@ -17,8 +17,18 @@
     </array>
     <key>NSAppTransportSecurity</key>
     <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
+        <!-- 僅對學校網域放行不安全的 HTTP（部分校內舊頁面），其餘一律要求 ATS 合規的 HTTPS。
+             apps.nutc.edu.tw 的憑證鏈問題由 NUTCServerTrustDelegate 於 HTTPS 下處理，無需在此放行。 -->
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>nutc.edu.tw</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+            </dict>
+        </dict>
     </dict>
 </dict>
 </plist>

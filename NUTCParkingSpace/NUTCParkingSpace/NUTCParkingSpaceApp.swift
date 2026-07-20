@@ -27,7 +27,18 @@ struct NUTCParkingSpaceApp: App {
                 configurations: modelConfiguration
             )
         } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
+            // 儲存區可能因先前的資料模型變更而無法遷移或已毀損。
+            // 與其直接 fatalError 讓使用者一開 App 就閃退且無法復原，
+            // 改為退回「僅記憶體」容器，讓 App 仍可啟動使用；資料待下次正常啟動再持久化。
+            print("持久化 ModelContainer 初始化失敗，改用記憶體容器：\(error)")
+            do {
+                modelContainer = try ModelContainer(
+                    for: Course.self, HomeworkItem.self,
+                    configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                )
+            } catch {
+                fatalError("連記憶體 ModelContainer 都無法建立：\(error)")
+            }
         }
     }
 
@@ -41,8 +52,13 @@ struct NUTCParkingSpaceApp: App {
                     OnboardingView(hasShownOnboarding: $hasShownOnboarding)
                 }
             }
+            // 只在使用者看完 onboarding、進入主畫面後才申請通知權限，
+            // 避免在教學第一頁就跳出無情境的系統權限彈窗。
+            .onChange(of: hasShownOnboarding) { _, shown in
+                if shown { requestNotificationPermission() }
+            }
             .onAppear {
-                requestNotificationPermission()
+                if hasShownOnboarding { requestNotificationPermission() }
             }
         }
         .modelContainer(modelContainer)

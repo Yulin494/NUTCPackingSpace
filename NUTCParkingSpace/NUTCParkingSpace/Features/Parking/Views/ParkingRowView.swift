@@ -4,25 +4,48 @@ struct ParkingRowView: View {
     let parkingLot: ParkingLot
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(parkingLot.name)
-                    .font(.headline)
-                Text("更新時間：\(parkingLot.lastUpdated.formatted(.dateTime.hour().minute().locale(Locale(identifier: "zh_Hant_TW"))))")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+        VStack(spacing: 8) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(parkingLot.name)
+                        .font(.headline)
+                    Text("更新時間：\(parkingLot.lastUpdated.formatted(.dateTime.hour().minute().locale(Locale(identifier: "zh_Hant_TW"))))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 0) {
+                    HStack(alignment: .firstTextBaseline, spacing: 2) {
+                        Text("\(parkingLot.availableCount)")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(statusColor)
+                        if parkingLot.totalCapacity > 0 {
+                            Text("/ \(parkingLot.totalCapacity)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    Text("剩餘車位")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
             }
-            
-            Spacer()
-            
-            VStack(alignment: .trailing) {
-                Text("\(parkingLot.availableCount)")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(statusColor)
-                
-                Text("剩餘車位")
-                    .font(.caption2)
+
+            // 剩餘比例條（有總量資料時才顯示）
+            if parkingLot.totalCapacity > 0 {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color.secondary.opacity(0.15))
+                        Capsule()
+                            .fill(statusColor)
+                            .frame(width: max(4, geo.size.width * availabilityPercentage))
+                    }
+                }
+                .frame(height: 5)
             }
         }
         .padding(.vertical, 4)

@@ -16,12 +16,14 @@ private struct EmergencyContact: Identifiable {
 }
 
 struct EmergencyView: View {
+    // 電話為台中科大三民校區實際分機（校安中心為校園安全通報專線）
     private let contacts: [EmergencyContact] = [
-        EmergencyContact(name: "校安中心", phone: "04-22195678", icon: "shield.fill",                            color: .red,    desc: "24小時校園安全服務"),
-        EmergencyContact(name: "健康中心", phone: "04-22195222", icon: "cross.circle.fill",                      color: .green,  desc: "醫護諮詢與急救協助"),
-        EmergencyContact(name: "警衛室",   phone: "04-22195000", icon: "person.badge.shield.checkmark.fill",     color: .blue,   desc: "校門口警衛值班"),
-        EmergencyContact(name: "消防救護", phone: "119",          icon: "flame.fill",                            color: .orange, desc: "火災、緊急救護"),
-        EmergencyContact(name: "警察報案", phone: "110",          icon: "star.circle.fill",                      color: .indigo, desc: "治安事件報案"),
+        EmergencyContact(name: "校安中心",   phone: "04-22195999", icon: "shield.fill",                        color: .red,    desc: "校園安全通報專線"),
+        EmergencyContact(name: "衛生保健組", phone: "04-22195234", icon: "cross.circle.fill",                  color: .green,  desc: "健康中心・急救協助"),
+        EmergencyContact(name: "生活輔導組", phone: "04-22195210", icon: "person.2.fill",                      color: .blue,   desc: "生活・住宿・急難協助"),
+        EmergencyContact(name: "學校總機",   phone: "04-22195678", icon: "building.columns.fill",              color: .teal,   desc: "各單位轉接代表號"),
+        EmergencyContact(name: "消防救護",   phone: "119",          icon: "flame.fill",                        color: .orange, desc: "火災、緊急救護"),
+        EmergencyContact(name: "警察報案",   phone: "110",          icon: "star.circle.fill",                  color: .indigo, desc: "治安事件報案"),
     ]
 
     var body: some View {

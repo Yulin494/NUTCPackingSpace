@@ -2,13 +2,21 @@ import SwiftUI
 
 struct ParkingListView: View {
     @StateObject private var viewModel = ParkingListViewModel()
+    @ObservedObject private var commuteManager = CommuteManager.shared
     // 控制設定頁面的顯示狀態
     @State private var showSettings = false
     @State private var showMap = false
-    
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
+                // 追蹤中橫幅（可停止）
+                if commuteManager.isCommuting {
+                    trackingBanner
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .listRowSeparator(.hidden)
+                }
+
                 if viewModel.isLoading && viewModel.parkingLots.isEmpty {
                     // 骨架屏載入效果
                     ForEach(0..<6, id: \.self) { _ in
@@ -31,6 +39,15 @@ struct ParkingListView: View {
                                 }
                             }
                         }
+                    }
+
+                    if !viewModel.parkingLots.isEmpty {
+                        Text("長按停車場可開始通勤即時追蹤")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                     }
                 }
             }
@@ -60,14 +77,19 @@ struct ParkingListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 8) {
-                        // 追蹤全部按鈕
+                        // 追蹤全部按鈕：可開始 / 停止（開始時顯示實心、監控中顯示斜線）
                         Button(action: {
                             HapticManager.shared.impact(style: .medium)
-                            CommuteManager.shared.startTrackingAll()
+                            if commuteManager.isCommuting {
+                                commuteManager.stopCommuting()
+                            } else {
+                                commuteManager.startTrackingAll()
+                            }
                         }) {
-                            Image(systemName: "eye.fill")
+                            Image(systemName: commuteManager.isCommuting ? "eye.slash.fill" : "eye.fill")
+                                .foregroundColor(commuteManager.isCommuting ? .red : nil)
                         }
-                        
+
                         // 地圖按鈕
                         Button(action: {
                             HapticManager.shared.impact(style: .light)
@@ -75,7 +97,7 @@ struct ParkingListView: View {
                         }) {
                             Image(systemName: "map")
                         }
-                        
+
                         // 設定按鈕：點擊開啟設定頁面
                         Button(action: {
                             HapticManager.shared.impact(style: .light)
@@ -95,5 +117,42 @@ struct ParkingListView: View {
                 CampusMapView()
             }
         }
+    }
+
+    // MARK: - 追蹤中橫幅
+
+    private var trackingBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "dot.radiowaves.left.and.right")
+                .font(.title3)
+                .foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("即時動態追蹤中")
+                    .font(.subheadline).fontWeight(.semibold)
+                    .foregroundColor(.white)
+                Text(commuteManager.trackingDescription ?? "正在監控車位")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.85))
+            }
+            Spacer()
+            Button {
+                HapticManager.shared.impact(style: .medium)
+                commuteManager.stopCommuting()
+            } label: {
+                Text("停止")
+                    .font(.caption).fontWeight(.semibold)
+                    .padding(.horizontal, 14).padding(.vertical, 7)
+                    .background(.white)
+                    .foregroundColor(.blue)
+                    .clipShape(Capsule())
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(
+            LinearGradient(colors: [.blue, Color(red: 0.2, green: 0.4, blue: 0.85)],
+                           startPoint: .leading, endPoint: .trailing)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }

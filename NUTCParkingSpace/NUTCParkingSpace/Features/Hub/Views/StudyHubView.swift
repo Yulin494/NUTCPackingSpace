@@ -214,7 +214,7 @@ struct StudyHubView: View {
             }
             .buttonStyle(.plain)
 
-            NavigationLink(destination: HomeworkView()) {
+            NavigationLink(destination: HomeworkView(autoPresentAdd: true)) {
                 Label("新增作業", systemImage: "plus.circle")
                     .font(.subheadline).fontWeight(.semibold)
                     .frame(maxWidth: .infinity)

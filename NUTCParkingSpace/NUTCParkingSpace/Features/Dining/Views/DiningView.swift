@@ -72,43 +72,72 @@ struct RestaurantCard: View {
         return ("fork.knife.circle.fill", .orange)
     }
 
+    // 點擊在 Apple 地圖搜尋店名＋地址
+    private var mapsURL: URL? {
+        let query = "\(restaurant.name) \(restaurant.address)"
+        let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        return URL(string: "http://maps.apple.com/?q=\(encoded)")
+    }
+
     var body: some View {
         let (icon, color) = iconAndColor
 
-        VStack(alignment: .leading, spacing: 10) {
-            // 頂部 icon 區
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(color.opacity(0.12))
-                    .frame(height: 70)
-                Image(systemName: icon)
-                    .font(.system(size: 32))
-                    .foregroundColor(color)
-            }
+        Link(destination: mapsURL ?? URL(string: "http://maps.apple.com")!) {
+            VStack(alignment: .leading, spacing: 10) {
+                // 頂部 icon 區
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(color.opacity(0.12))
+                        .frame(height: 70)
+                    Image(systemName: icon)
+                        .font(.system(size: 32))
+                        .foregroundColor(color)
+                }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(restaurant.name)
-                    .font(.subheadline).bold()
-                    .lineLimit(1)
-                Text(restaurant.category)
-                    .font(.caption2)
-                    .padding(.horizontal, 6).padding(.vertical, 2)
-                    .background(color.opacity(0.12))
-                    .foregroundColor(color)
-                    .clipShape(Capsule())
-                HStack(spacing: 3) {
-                    Image(systemName: "clock").font(.caption2).foregroundColor(.secondary)
-                    Text(restaurant.hours).font(.caption2).foregroundColor(.secondary).lineLimit(1)
-                }
-                if let note = restaurant.note {
-                    Text(note).font(.caption2).foregroundColor(.secondary).lineLimit(2)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(restaurant.name)
+                        .font(.subheadline).bold()
+                        .lineLimit(1)
+                    Text(restaurant.category)
+                        .font(.caption2)
+                        .padding(.horizontal, 6).padding(.vertical, 2)
+                        .background(color.opacity(0.12))
+                        .foregroundColor(color)
+                        .clipShape(Capsule())
+                    HStack(spacing: 3) {
+                        Image(systemName: "clock").font(.caption2).foregroundColor(.secondary)
+                        Text(restaurant.hours).font(.caption2).foregroundColor(.secondary).lineLimit(1)
+                    }
+                    // 地址（可點開地圖）
+                    HStack(spacing: 3) {
+                        Image(systemName: "mappin.and.ellipse").font(.caption2).foregroundColor(color)
+                        Text(restaurant.address).font(.caption2).foregroundColor(.secondary).lineLimit(1)
+                    }
+                    if let note = restaurant.note {
+                        Text(note).font(.caption2).foregroundColor(.secondary).lineLimit(2)
+                    }
+                    // 標籤
+                    if !restaurant.tags.isEmpty {
+                        HStack(spacing: 4) {
+                            ForEach(restaurant.tags.prefix(3), id: \.self) { tag in
+                                Text(tag)
+                                    .font(.system(size: 9))
+                                    .padding(.horizontal, 5).padding(.vertical, 2)
+                                    .background(Color.secondary.opacity(0.12))
+                                    .foregroundColor(.secondary)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
                 }
             }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
         }
-        .padding(12)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
+        .buttonStyle(.plain)
     }
 }
 

@@ -11,7 +11,11 @@ struct HomeworkView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var showAddHomework = false
     @State private var showCompleted = false
+    @State private var homeworkToDelete: HomeworkItem?
     @Query(sort: \HomeworkItem.dueDate) var homeworks: [HomeworkItem]
+
+    /// 由外部（如課業頁「新增作業」快速鍵）帶入，進頁後自動開啟新增表單
+    var autoPresentAdd: Bool = false
 
     private var pending: [HomeworkItem] {
         homeworks.filter { !$0.isCompleted }
@@ -38,6 +42,13 @@ struct HomeworkView: View {
                                     syncNotifications()
                                 }
                             })
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    homeworkToDelete = homework
+                                } label: {
+                                    Label("刪除作業", systemImage: "trash")
+                                }
+                            }
                         }
                     }
 
@@ -45,6 +56,12 @@ struct HomeworkView: View {
                     if !completeds.isEmpty {
                         completedSection
                     }
+
+                    Text("長按作業可刪除")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 4)
                 }
             }
             .padding(.horizontal, 16)
@@ -63,9 +80,32 @@ struct HomeworkView: View {
         .sheet(isPresented: $showAddHomework) {
             AddHomeworkView(isPresented: $showAddHomework)
         }
-        .onAppear { syncNotifications() }
+        .confirmationDialog(
+            "刪除作業",
+            isPresented: Binding(
+                get: { homeworkToDelete != nil },
+                set: { if !$0 { homeworkToDelete = nil } }
+            ),
+            presenting: homeworkToDelete
+        ) { hw in
+            Button("刪除「\(hw.title)」", role: .destructive) { deleteHomework(hw) }
+            Button("取消", role: .cancel) { homeworkToDelete = nil }
+        } message: { hw in
+            Text("確定要刪除「\(hw.title)」嗎？此動作無法復原。")
+        }
+        .onAppear {
+            syncNotifications()
+            if autoPresentAdd && !showAddHomework { showAddHomework = true }
+        }
         .onChange(of: homeworks.count) { syncNotifications() }
         .onChange(of: pending.count) { syncNotifications() }
+    }
+
+    private func deleteHomework(_ homework: HomeworkItem) {
+        modelContext.delete(homework)
+        try? modelContext.save()
+        homeworkToDelete = nil
+        // homeworks.count 改變會觸發 onChange → syncNotifications()，清掉對應的提醒
     }
 
     // MARK: - Sub Views
@@ -137,6 +177,13 @@ struct HomeworkView: View {
                             syncNotifications()
                         }
                     })
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            homeworkToDelete = homework
+                        } label: {
+                            Label("刪除作業", systemImage: "trash")
+                        }
+                    }
                 }
             }
         }
@@ -145,7 +192,12 @@ struct HomeworkView: View {
     // MARK: - Helpers
 
     private func syncNotifications() {
-        Task { await HomeworkNotificationService.shared.reschedule(homeworks: homeworks) }
+        // 轉成 Sendable 快照後再交給 actor，避免把 SwiftData @Model 跨 actor 傳遞
+        let snapshot = homeworks.map {
+            HomeworkReminder(title: $0.title, courseName: $0.courseName,
+                             dueDate: $0.dueDate, isCompleted: $0.isCompleted)
+        }
+        Task { await HomeworkNotificationService.shared.reschedule(homeworks: snapshot) }
     }
 }
 
@@ -217,7 +269,7 @@ struct HomeworkCard: View {
                 }
                 .buttonStyle(.plain)
 
-                // 標題 + 科目
+                // 標題 + 科目 + 備註
                 VStack(alignment: .leading, spacing: 4) {
                     Text(homework.title)
                         .font(.headline)
@@ -228,6 +280,12 @@ struct HomeworkCard: View {
                     Text(homework.courseName)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                    if let note = homework.note, !note.isEmpty {
+                        Text(note)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .lineLimit(2)
+                    }
                 }
 
                 Spacer()
@@ -269,12 +327,15 @@ struct AddHomeworkView: View {
                 Section(header: Text("作業資訊")) {
                     TextField("作業名稱", text: $homeworkTitle)
                     TextField("科目", text: $courseName)
-                    TextEditor(text: $note)
-                        .frame(height: 80)
                 }
 
                 Section(header: Text("截止日期")) {
                     DatePicker("到期日", selection: $dueDate, displayedComponents: .date)
+                }
+
+                Section(header: Text("備註（選填）")) {
+                    TextEditor(text: $note)
+                        .frame(height: 80)
                 }
             }
             .navigationTitle("新增作業")

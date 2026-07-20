@@ -26,11 +26,13 @@ class CommuteManager: NSObject, ObservableObject {
     }
     
     private func setupLocationManager() {
-        // 背景執行必要設定
+        // 背景執行必要設定。
+        // 這裡的定位僅用於在追蹤期間保持 App 喚醒（實際車位資料靠 30 秒計時器抓取），
+        // 因此使用較省電的精度即可，不需要 kCLLocationAccuracyBest 持續高精度定位。
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.distanceFilter = kCLDistanceFilterNone // 接收所有更新以保持 App 喚醒
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.distanceFilter = 50 // 每移動約 50m 才更新，降低耗電
         locationManager.delegate = self
     }
     

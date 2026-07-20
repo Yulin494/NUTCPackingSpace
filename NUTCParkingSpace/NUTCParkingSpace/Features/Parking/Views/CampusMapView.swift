@@ -5,7 +5,7 @@ struct CampusMapView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZoomableImage(imageName: "CampusMap")
                 .navigationTitle("三民校區配置圖")
                 .navigationBarTitleDisplayMode(.inline)

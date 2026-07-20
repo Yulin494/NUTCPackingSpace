@@ -63,33 +63,14 @@ struct SchoolPortalView: View {
 
 struct PortalWebView: View {
     let item: PortalItem
-    @State private var isLoading = true
 
     var body: some View {
-        ZStack(alignment: .top) {
-            if let url = URL(string: item.urlString) {
-                WebView(url: url, isLoading: $isLoading)
-                if isLoading {
-                    ProgressView()
-                        .padding(8)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(8)
-                        .padding(.top, 8)
-                }
-            } else {
-                Text("無效連結").foregroundColor(.secondary)
-            }
-        }
-        .navigationTitle(item.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if let url = URL(string: item.urlString) {
-                    Link(destination: url) {
-                        Image(systemName: "safari")
-                    }
-                }
-            }
+        if let url = URL(string: item.urlString) {
+            WebPageContainer(url: url, navigationTitle: item.name)
+        } else {
+            Text("無效連結")
+                .foregroundColor(.secondary)
+                .navigationTitle(item.name)
         }
     }
 }

@@ -140,6 +140,13 @@
 			);
 			target = F1D72E992F4C514E007C3B14 /* ParkingWatchWidgetExtension */;
 		};
+		F1D72EDA2F4C51C1007C3B14 /* Exceptions for "ParkingWatch" folder in "ParkingWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F1D72EB32F4C51C1007C3B14 /* ParkingWatch Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -180,6 +187,9 @@
 		};
 		F1D72EB82F4C51C1007C3B14 /* ParkingWatch */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F1D72EDA2F4C51C1007C3B14 /* Exceptions for "ParkingWatch" folder in "ParkingWatch Watch App" target */,
+			);
 			path = ParkingWatch;
 			sourceTree = "<group>";
 		};
@@ -1033,6 +1043,7 @@
 				DEVELOPMENT_TEAM = S8FBP4YLUA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ParkingWatch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -1067,6 +1078,7 @@
 				DEVELOPMENT_TEAM = S8FBP4YLUA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ParkingWatch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ParkingWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;

@@ -8,8 +8,8 @@ import NUTCParkingShared
 struct ParkingLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: ParkingAttributes.self) { context in
-            // 鎖定畫面 / 橫幅 UI
-            ParkingLiveActivityLockScreenView(context: context)
+            // 鎖定畫面 / 橫幅 UI（依 activityFamily 切換手錶版）
+            ParkingLiveActivityContentView(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
                 // 動態島展開區域 UI
@@ -39,6 +39,8 @@ struct ParkingLiveActivity: Widget {
                             HStack {
                                 Text(lot.name)
                                     .font(.caption2)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
                                 Spacer()
                                 Text("\(lot.available)位")
                                     .font(.caption2)
@@ -60,7 +62,7 @@ struct ParkingLiveActivity: Widget {
                     .padding(.bottom)
                 }
             } compactLeading: {
-                Image(systemName: "bicycle")
+                Image(systemName: "motorcycle.fill")
                     .foregroundStyle(.cyan)
             } compactTrailing: {
                 let total = context.state.lots.reduce(0) { $0 + $1.available }
@@ -71,6 +73,69 @@ struct ParkingLiveActivity: Widget {
                 let total = context.state.lots.reduce(0) { $0 + $1.available }
                 Text("\(total)")
                     .font(.caption2)
+            }
+        }
+        // 讓 watchOS Smart Stack 使用專屬小卡，而非拼湊動態島
+        .supplementalActivityFamilies([.small])
+    }
+}
+
+/// 依 activityFamily 決定顯示鎖定畫面版或手錶版
+struct ParkingLiveActivityContentView: View {
+    let context: ActivityViewContext<ParkingAttributes>
+    @Environment(\.activityFamily) private var activityFamily
+
+    var body: some View {
+        switch activityFamily {
+        case .small:
+            ParkingLiveActivityWatchView(context: context)
+        default:
+            ParkingLiveActivityLockScreenView(context: context)
+        }
+    }
+}
+
+/// Apple Watch Smart Stack 小卡（只用系統文字樣式，隨字級縮放）
+struct ParkingLiveActivityWatchView: View {
+    let context: ActivityViewContext<ParkingAttributes>
+
+    var body: some View {
+        let lots = context.state.lots
+        let total = lots.reduce(0) { $0 + $1.available }
+
+        VStack(alignment: .leading, spacing: 4) {
+            // 標題列：圖示 + 機車空位 + 總數
+            HStack(spacing: 4) {
+                Image(systemName: "motorcycle.fill")
+                    .foregroundStyle(.cyan)
+                Text("機車空位")
+                    .lineLimit(1)
+                Spacer()
+                Text("\(total)")
+                    .fontWeight(.bold)
+                    .monospacedDigit()
+                    .foregroundStyle(total > 0 ? .green : .red)
+            }
+            .font(.footnote)
+
+            if lots.isEmpty {
+                Text("暫無資料")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            } else {
+                // 最多顯示 2 個停車場
+                ForEach(Array(lots.prefix(2)), id: \.self) { lot in
+                    HStack {
+                        Text(lot.name)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        Spacer()
+                        Text("\(lot.available)")
+                            .monospacedDigit()
+                            .foregroundStyle(lot.available > 0 ? .green : .red)
+                    }
+                    .font(.caption2)
+                }
             }
         }
     }

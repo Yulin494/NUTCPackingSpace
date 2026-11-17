@@ -16,7 +16,17 @@ struct AnnouncementListView: View {
             : viewModel.announcements.filter { $0.category == selectedCategory }
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelAnnouncementListView()
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // 分類 Chip filter

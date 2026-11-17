@@ -26,7 +26,30 @@ struct EmergencyView: View {
         EmergencyContact(name: "警察報案",   phone: "110",          icon: "star.circle.fill",                  color: .indigo, desc: "治安事件報案"),
     ]
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelEmergencyView(contacts: contacts.map {
+                PixelEmergencyContact(name: $0.name, phone: $0.phone, desc: $0.desc, kind: pixelKind(for: $0.name))
+            })
+        } else {
+            standardBody
+        }
+    }
+
+    private func pixelKind(for name: String) -> PixelInfoGlyphKind {
+        switch name {
+        case "校安中心": return .shield
+        case "衛生保健組": return .medcross
+        case "生活輔導組": return .people
+        case "學校總機": return .building
+        case "消防救護": return .flame
+        default: return .star
+        }
+    }
+
+    private var standardBody: some View {
         ScrollView {
             VStack(spacing: 16) {
                 sosBanner

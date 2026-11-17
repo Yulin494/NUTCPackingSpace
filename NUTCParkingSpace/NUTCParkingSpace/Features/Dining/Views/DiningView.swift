@@ -18,7 +18,17 @@ struct DiningView: View {
         selectedCategory == "全部" ? restaurants : restaurants.filter { $0.category == selectedCategory }
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelDiningView(restaurants: restaurants)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // 分類 Chip

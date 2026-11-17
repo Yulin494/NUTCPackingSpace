@@ -142,8 +142,17 @@ struct WebLoadErrorView: View {
 
 struct AnnouncementDetailView: View {
     let url: URL
+    @Environment(\.appearanceStyle) private var appearanceStyle
 
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelAnnouncementDetailView(url: url)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         WebPageContainer(url: url)
     }
 }

@@ -8,7 +8,17 @@ import UIKit
 import NUTCParkingShared
 
 struct CampusHubView: View {
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelCampusHubView()
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {

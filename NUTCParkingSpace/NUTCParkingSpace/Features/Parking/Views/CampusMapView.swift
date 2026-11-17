@@ -3,8 +3,17 @@ import UIKit
 
 struct CampusMapView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.appearanceStyle) private var appearanceStyle
     
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelCampusMapSheet(dismiss: { dismiss() })
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             ZoomableImage(imageName: "CampusMap")
                 .navigationTitle("三民校區配置圖")

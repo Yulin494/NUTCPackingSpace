@@ -7,7 +7,25 @@ struct YouBikeView: View {
     @State private var errorMessage: String?
     @State private var radiusKM: Double = 1.5   // 搜尋半徑（公里）
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelYouBikeView(
+                stations: stations,
+                isLoading: isLoading,
+                errorMessage: errorMessage,
+                radiusKM: radiusKM,
+                reload: { await load() },
+                expandRadius: { radiusKM = 2.0; await load() }
+            )
+            .task { await load() }
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         Group {
             if isLoading {
                 ProgressView("載入中…")

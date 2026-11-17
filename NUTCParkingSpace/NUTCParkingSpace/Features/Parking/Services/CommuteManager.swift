@@ -173,6 +173,38 @@ class CommuteManager: NSObject, ObservableObject {
     }
 }
 
+extension CommuteManager {
+    /// 外觀切換後重繪進行中的即時動態：用目前資料再 update 一次（樣式由 widget 讀 App Group）
+    func refreshAppearance() {
+        guard let activity = currentActivity else { return }
+        let state = activity.content.state
+        Task {
+            await activity.update(ActivityContent(state: state, staleDate: nil))
+        }
+    }
+
+    #if DEBUG
+    /// DEBUG：啟動參數含 `-DebugStartLiveActivity YES` 時，用假資料開一個即時動態（截圖用）
+    func debugStartIfRequested() {
+        guard UserDefaults.standard.bool(forKey: "DebugStartLiveActivity"),
+              currentActivity == nil,
+              ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        let lots = [
+            LiteLot(name: "機車一場", available: 86, total: 120),
+            LiteLot(name: "機車二場", available: 31, total: 100),
+            LiteLot(name: "機車三場", available: 9, total: 80),
+            LiteLot(name: "機車四場", available: 0, total: 60),
+        ]
+        let state = ParkingAttributes.ContentState(lots: lots, lastUpdated: Date())
+        currentActivity = try? Activity.request(
+            attributes: ParkingAttributes(title: "全校車位概況"),
+            content: .init(state: state, staleDate: nil),
+            pushType: nil
+        )
+    }
+    #endif
+}
+
 extension CommuteManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // 背景位置更新以保持 App 存活。

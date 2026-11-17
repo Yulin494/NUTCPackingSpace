@@ -25,7 +25,17 @@ struct HomeworkView: View {
         homeworks.filter { $0.isCompleted }
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelHomeworkView(autoPresentAdd: autoPresentAdd)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 if pending.isEmpty && completeds.isEmpty {
@@ -321,7 +331,17 @@ struct AddHomeworkView: View {
     @State private var dueDate = Date().addingTimeInterval(86400)
     @State private var note = ""
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelAddHomeworkView(isPresented: $isPresented)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             Form {
                 Section(header: Text("作業資訊")) {

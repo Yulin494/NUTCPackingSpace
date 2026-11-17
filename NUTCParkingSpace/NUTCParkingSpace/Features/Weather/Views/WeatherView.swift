@@ -5,8 +5,17 @@ struct WeatherView: View {
     @State private var weather: SharedWeatherData?
     @State private var isLoading = true
     @State private var error: String?
+    @Environment(\.appearanceStyle) private var appearanceStyle
 
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelWeatherView()
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         ScrollView {
             if isLoading {
                 ProgressView("載入天氣…")

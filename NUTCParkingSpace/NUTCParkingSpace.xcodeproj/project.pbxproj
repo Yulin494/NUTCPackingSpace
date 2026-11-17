@@ -123,6 +123,15 @@
 				Features/Parking/Models/ParkingAttributes.swift,
 				Features/Parking/Models/ParkingLot.swift,
 				Features/Parking/Services/ParkingDataService.swift,
+				Features/Shared/Pixel/NamePlate.swift,
+				Features/Shared/Pixel/PixelFrameShape.swift,
+				Features/Shared/Pixel/PixelIcon.swift,
+				Features/Shared/Pixel/StatusChip.swift,
+				Features/Shared/Theme/AppearanceStyle.swift,
+				Features/Shared/Theme/PixelFont.swift,
+				Features/Shared/Theme/PixelMetrics.swift,
+				Features/Shared/Theme/PixelPalette.swift,
+				Resources/Fonts/Cubic_11.ttf,
 			);
 			target = 8EBC8CA52EF9084200407A3C /* ParkingWidgetExtension */;
 		};

@@ -31,7 +31,17 @@ struct SchoolPortalView: View {
                    urlString: "https://cc.nutc.edu.tw/"),
     ]
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelPortalView(portals: portals)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         List(portals) { item in
             NavigationLink(destination: PortalWebView(item: item)) {
                 HStack(spacing: 14) {

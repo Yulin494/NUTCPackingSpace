@@ -6,33 +6,52 @@ import SwiftUI
 import NUTCParkingShared
 
 struct ParkingLiveActivity: Widget {
+    /// 指定樣式（Preview 用）；nil 時讀取 App 同步到 App Group 的外觀設定
+    var appearanceOverride: AppearanceStyle?
+
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: ParkingAttributes.self) { context in
             // 鎖定畫面 / 橫幅 UI（依 activityFamily 切換手錶版）
-            ParkingLiveActivityContentView(context: context)
+            ParkingLiveActivityContentView(context: context, appearanceOverride: appearanceOverride)
         } dynamicIsland: { context in
-            DynamicIsland {
+            let style = appearanceOverride ?? AppearanceStyle.fromAppGroup()
+            return DynamicIsland {
                 // 動態島展開區域 UI
                 DynamicIslandExpandedRegion(.leading) {
+                    if style == .pixel {
+                        ParkingPixelIslandLeading(lots: context.state.lots)
+                    } else {
                     Image(systemName: "motorcycle.fill")
                         .font(.title2)
                         .foregroundColor(.cyan)
                         .padding(.leading)
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
+                    if style == .pixel {
+                        ParkingPixelIslandTrailing(lots: context.state.lots)
+                    } else {
                     // Show total available
                     let total = context.state.lots.reduce(0) { $0 + $1.available }
                     Text("\(total)")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding(.trailing)
+                    }
                 }
                 DynamicIslandExpandedRegion(.center) {
+                    if style == .pixel {
+                        ParkingPixelIslandCenter(title: context.attributes.title)
+                    } else {
                     Text(context.attributes.title)
                         .font(.caption)
                         .lineLimit(1)
+                    }
                 }   
                 DynamicIslandExpandedRegion(.bottom) {
+                    if style == .pixel {
+                        ParkingPixelIslandBottom(lots: context.state.lots, lastUpdated: context.state.lastUpdated)
+                    } else {
                     // Show a mini list or summary
                     VStack(alignment: .leading, spacing: 4) {
                         ForEach(Array(context.state.lots.prefix(3)), id: \.self) { lot in
@@ -60,19 +79,32 @@ struct ParkingLiveActivity: Widget {
                     }
                     .padding(.horizontal)
                     .padding(.bottom)
+                    }
                 }
             } compactLeading: {
+                if style == .pixel {
+                    ParkingPixelCompactLeading(lots: context.state.lots)
+                } else {
                 Image(systemName: "motorcycle.fill")
                     .foregroundStyle(.cyan)
+                }
             } compactTrailing: {
+                if style == .pixel {
+                    ParkingPixelCompactTrailing(lots: context.state.lots)
+                } else {
                 let total = context.state.lots.reduce(0) { $0 + $1.available }
                 Text("\(total)")
                     .fontWeight(.bold)
                     .foregroundStyle(total > 0 ? .green : .red)
+                }
             } minimal: {
+                if style == .pixel {
+                    ParkingPixelMinimal(lots: context.state.lots)
+                } else {
                 let total = context.state.lots.reduce(0) { $0 + $1.available }
                 Text("\(total)")
                     .font(.caption2)
+                }
             }
         }
         // 讓 watchOS Smart Stack 使用專屬小卡，而非拼湊動態島
@@ -83,14 +115,29 @@ struct ParkingLiveActivity: Widget {
 /// 依 activityFamily 決定顯示鎖定畫面版或手錶版
 struct ParkingLiveActivityContentView: View {
     let context: ActivityViewContext<ParkingAttributes>
+    /// 指定樣式（Preview 用）；nil 時讀取 App Group 的外觀設定
+    var appearanceOverride: AppearanceStyle?
     @Environment(\.activityFamily) private var activityFamily
 
     var body: some View {
+        let style = appearanceOverride ?? AppearanceStyle.fromAppGroup()
         switch activityFamily {
         case .small:
-            ParkingLiveActivityWatchView(context: context)
+            if style == .pixel {
+                ParkingLiveActivityWatchPixelView(context: context)
+            } else {
+                ParkingLiveActivityWatchView(context: context)
+            }
         default:
-            ParkingLiveActivityLockScreenView(context: context)
+            if style == .pixel {
+                ParkingPixelLockScreenView(
+                    title: context.attributes.title,
+                    lots: context.state.lots,
+                    lastUpdated: context.state.lastUpdated
+                )
+            } else {
+                ParkingLiveActivityLockScreenView(context: context)
+            }
         }
     }
 }

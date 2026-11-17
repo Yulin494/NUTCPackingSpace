@@ -49,7 +49,17 @@ struct ScheduleView: View {
         return (0..<7).map { cal.date(byAdding: .day, value: $0, to: monday)! }
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelScheduleView()
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         ScrollView {
             VStack(spacing: 16) {
                 // 週日選擇器
@@ -350,7 +360,17 @@ struct AddCourseView: View {
         return [prev, base, next]
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelAddCourseView(isPresented: $isPresented)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             Form {
                 Section(header: Text("課程資訊")) {

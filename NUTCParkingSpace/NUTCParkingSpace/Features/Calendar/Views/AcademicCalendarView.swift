@@ -20,7 +20,17 @@ struct AcademicCalendarView: View {
         events.first { !isPast($0.date) }?.id
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelAcademicCalendarView()
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         ScrollViewReader { proxy in
             List(events) { event in
                 VStack(alignment: .leading, spacing: 4) {

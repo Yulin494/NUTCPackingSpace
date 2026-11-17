@@ -15,7 +15,17 @@ struct SettingsView: View {
 
     var isPresented: Binding<Bool>?
 
+    @Environment(\.appearanceStyle) private var currentStyle
+
     var body: some View {
+        if currentStyle == .pixel {
+            PixelSettingsView()
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             List {
                 // MARK: 外觀

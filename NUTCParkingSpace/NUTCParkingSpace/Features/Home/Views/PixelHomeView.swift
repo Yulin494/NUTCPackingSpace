@@ -86,7 +86,7 @@ struct PixelHomeView: View {
                     .padding(.bottom, 32)
                 }
             }
-            .background(PixelPalette.paper.ignoresSafeArea())
+            .background(PixelPalette.paper2.ignoresSafeArea())
             .foregroundStyle(PixelPalette.ink)
             .navigationBarHidden(true)
             .refreshable { await refresh() }
@@ -162,7 +162,7 @@ struct PixelHomeView: View {
         }
         .padding(.horizontal, 16)
         .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-        .background(PixelPalette.paper2)
+        .background(PixelPalette.paper)
         .overlay(alignment: .top) {
             Rectangle().fill(PixelPalette.ink).frame(height: PixelMetrics.border)
         }

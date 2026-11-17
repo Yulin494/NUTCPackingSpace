@@ -16,7 +16,17 @@ struct FontLicenseView: View {
         return text
     }()
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelFontLicenseView(licenseText: licenseText)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         List {
             Section("字型") {
                 LabeledContent("名稱", value: "俐方體 11 號（Cubic 11）")

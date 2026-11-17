@@ -53,18 +53,32 @@ struct NUTCParkingSpaceApp: App {
                     OnboardingView(hasShownOnboarding: $hasShownOnboarding)
                 }
             }
+            #if DEBUG
+            // DEBUG 截圖入口要放在外觀注入與外皮之前，才會吃到像素外觀
+            .modifier(PixelMapGalleryRoot())
+            .modifier(DebugRootScreen())
+            #endif
             .environment(\.appearanceStyle, appearanceStyle)
+            // 外觀同步到 App Group（Widget／即時動態讀取），並讓進行中的即時動態重繪
+            .onChange(of: appearanceStyle, initial: true) { _, style in
+                style.syncToAppGroup()
+                CommuteManager.shared.refreshAppearance()
+                #if DEBUG
+                CommuteManager.shared.debugStartIfRequested()
+                #endif
+            }
             // 只在使用者看完 onboarding、進入主畫面後才申請通知權限，
             // 避免在教學第一頁就跳出無情境的系統權限彈窗。
             .onChange(of: hasShownOnboarding) { _, shown in
                 if shown { requestNotificationPermission() }
             }
             .onAppear {
+                #if DEBUG
+                // 截圖用的直達子頁不跳通知權限彈窗，避免遮住畫面
+                if UserDefaults.standard.string(forKey: "DebugRootScreen") != nil { return }
+                #endif
                 if hasShownOnboarding { requestNotificationPermission() }
             }
-            #if DEBUG
-            .modifier(PixelMapGalleryRoot())
-            #endif
         }
         .modelContainer(modelContainer)
     }

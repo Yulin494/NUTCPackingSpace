@@ -32,7 +32,17 @@ struct LibraryView: View {
         }
     }
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelLibraryView(isOpenNow: isOpenNow, catalogURL: catalogURL)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         List {
             // MARK: 開放狀態
             Section {

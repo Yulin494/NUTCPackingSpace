@@ -62,7 +62,8 @@ struct PixelParkingRow: View {
     let lot: ParkingLot
     var isSelected: Bool = false
     var onTap: () -> Void = {}
-    var onStartCommute: () -> Void = {}
+    var isTracked: Bool = false
+    var onToggleTracking: () -> Void = {}
 
     /// 與地圖標記一致：沿用 PixelStatus 的絕對數量門檻（>=30 充足、1-29 緊張、0 滿位）
     private var status: PixelStatus { .forLot(lot) }
@@ -76,6 +77,18 @@ struct PixelParkingRow: View {
         lot.lastUpdated.formatted(.dateTime.hour().minute().locale(Locale(identifier: "zh_Hant_TW")))
     }
 
+    /// 追蹤中小名牌：像素圖示 + 文字（形狀與文字，不單靠顏色）
+    private var trackingTag: some View {
+        HStack(spacing: 4) {
+            PixelIcon(kind: .dot, scale: 1, color: PixelPalette.ink)
+            Text("追蹤中").pixelFont(size: PixelMetrics.FontSize.small)
+        }
+        .foregroundStyle(PixelPalette.ink)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .pixelFrame(fill: PixelPalette.gold)
+    }
+
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 8) {
@@ -85,7 +98,10 @@ struct PixelParkingRow: View {
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundStyle(PixelPalette.ink)
                             .fixedSize(horizontal: false, vertical: true)
-                        StatusChip(status: status)
+                        HStack(spacing: 6) {
+                            StatusChip(status: status)
+                            if isTracked { trackingTag }
+                        }
                     }
                     Spacer(minLength: 8)
                     VStack(alignment: .trailing, spacing: 2) {
@@ -109,7 +125,7 @@ struct PixelParkingRow: View {
                     PixelOccupancyBar(ratio: ratio, status: status)
                 }
                 if isSelected {
-                    Text("更新時間 \(updatedText)　長按可開始通勤監控")
+                    Text("更新時間 \(updatedText)　長按可加入或取消追蹤")
                         .font(.system(size: 15))
                         .foregroundStyle(PixelPalette.muted)
                 }
@@ -117,18 +133,22 @@ struct PixelParkingRow: View {
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
         }
         .buttonStyle(PixelButtonStyle(fill: isSelected ? PixelPalette.gold : PixelPalette.paper))
-        // 長按：開始通勤即時追蹤（對應 ParkingRowView 的 contextMenu）
+        // 長按：加入／取消即時追蹤（對應 ParkingRowView 的 contextMenu）
         .contextMenu {
             Button {
                 HapticManager.shared.impact(style: .medium)
-                onStartCommute()
+                onToggleTracking()
             } label: {
-                Label("開始通勤監控", systemImage: "motorcycle.fill")
+                if isTracked {
+                    Label("取消追蹤", systemImage: "location.slash.fill")
+                } else {
+                    Label("加入追蹤", systemImage: "location.fill")
+                }
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(lot.name)，剩餘 \(lot.availableCount) 個車位，\(status.label)")
-        .accessibilityHint("長按可開始通勤監控")
+        .accessibilityLabel("\(lot.name)，剩餘 \(lot.availableCount) 個車位，\(status.label)\(isTracked ? "，追蹤中" : "")")
+        .accessibilityHint("長按可加入或取消追蹤")
         .accessibilityAddTraits(.isButton)
     }
 }

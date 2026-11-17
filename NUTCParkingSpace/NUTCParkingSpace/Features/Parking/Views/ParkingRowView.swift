@@ -2,13 +2,22 @@ import SwiftUI
 
 struct ParkingRowView: View {
     let parkingLot: ParkingLot
+    @ObservedObject private var commuteManager = CommuteManager.shared
     
     var body: some View {
         VStack(spacing: 8) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text(parkingLot.name)
-                        .font(.headline)
+                    HStack(spacing: 4) {
+                        Text(parkingLot.name)
+                            .font(.headline)
+                        if commuteManager.isTracking(parkingLot) {
+                            Image(systemName: "location.fill")
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                                .accessibilityLabel("追蹤中")
+                        }
+                    }
                     Text("更新時間：\(parkingLot.lastUpdated.formatted(.dateTime.hour().minute().locale(Locale(identifier: "zh_Hant_TW"))))")
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -52,9 +61,13 @@ struct ParkingRowView: View {
         .contextMenu {
             Button {
                 HapticManager.shared.impact(style: .medium)
-                CommuteManager.shared.startCommuting(for: parkingLot)
+                commuteManager.toggleTracking(for: parkingLot)
             } label: {
-                Label("開始通勤監控", systemImage: "motorcycle.fill")
+                if commuteManager.isTracking(parkingLot) {
+                    Label("取消追蹤", systemImage: "location.slash.fill")
+                } else {
+                    Label("加入追蹤", systemImage: "location.fill")
+                }
             }
         }
     }

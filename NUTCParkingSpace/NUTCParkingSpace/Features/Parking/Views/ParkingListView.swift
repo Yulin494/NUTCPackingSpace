@@ -52,7 +52,7 @@ struct ParkingListView: View {
                     }
 
                     if !viewModel.parkingLots.isEmpty {
-                        Text("長按停車場可開始通勤即時追蹤")
+                        Text("長按停車場可加入或取消即時追蹤，可同時追蹤多個")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity)
@@ -140,7 +140,7 @@ struct ParkingListView: View {
                 Text("即時動態追蹤中")
                     .font(.subheadline).fontWeight(.semibold)
                     .foregroundColor(.white)
-                Text(commuteManager.trackingDescription ?? "正在監控車位")
+                Text(commuteManager.trackingDescription ?? "正在追蹤車位")
                     .font(.caption2)
                     .foregroundColor(.white.opacity(0.85))
             }

@@ -41,7 +41,8 @@ struct PixelParkingView: View {
                         commuteManager.startTrackingAll()
                     }
                 },
-                onStartCommute: { commuteManager.startCommuting(for: $0) }
+                trackedNames: Set(commuteManager.trackedLotNames),
+                onToggleLotTracking: { commuteManager.toggleTracking(for: $0) }
             )
             .toolbar(.hidden, for: .navigationBar)
             .onAppear {
@@ -63,7 +64,8 @@ struct PixelParkingContent: View {
     var onRetry: () -> Void = {}
     var onRefresh: () async -> Void = {}
     var onToggleTracking: () -> Void = {}
-    var onStartCommute: (ParkingLot) -> Void = { _ in }
+    var trackedNames: Set<String> = []
+    var onToggleLotTracking: (ParkingLot) -> Void = { _ in }
 
     @State private var selectedID: UUID?
 
@@ -128,7 +130,7 @@ struct PixelParkingContent: View {
     private var trackingPanel: some View {
         HStack(spacing: 8) {
             NamePlate(text: "追蹤中", fill: PixelPalette.gold, textColor: PixelPalette.ink)
-            Text(trackingDescription ?? "正在監控車位")
+            Text(trackingDescription ?? "正在追蹤車位")
                 .font(.system(size: 15))
                 .foregroundStyle(PixelPalette.ink)
                 .lineLimit(2)
@@ -159,7 +161,8 @@ struct PixelParkingContent: View {
                                 lot: lot,
                                 isSelected: selectedID == lot.id,
                                 onTap: { selectedID = (selectedID == lot.id) ? nil : lot.id },
-                                onStartCommute: { onStartCommute(lot) }
+                                isTracked: trackedNames.contains(lot.name),
+                                onToggleTracking: { onToggleLotTracking(lot) }
                             )
                             .id(lot.id)
                         }

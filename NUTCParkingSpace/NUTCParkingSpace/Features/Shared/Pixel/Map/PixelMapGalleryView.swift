@@ -14,10 +14,14 @@ struct PixelMapGalleryView: View {
 
     /// 教室字串比對檢查：（輸入，預期建築名稱或 nil）
     private static let matchCases: [(String, String?)] = [
-        ("中正大樓 702", "中正大樓"),
+        ("中正大樓 702", "中科大樓"),
+        ("中科大樓 702", "中科大樓"),
+        ("中正 702", "中科大樓"),
         ("資訊大樓 405", "資訊館"),
+        ("資訊館 405", "資訊館"),
         ("體育館", "體育館"),
         ("翰英樓 301", "翰英樓"),
+        ("弘業樓 201", "弘業樓"),
         ("線上課程", nil),
     ]
 
@@ -34,7 +38,7 @@ struct PixelMapGalleryView: View {
                 Text("campus 鏡頭（晴・雲）")
                 PixelCampusMapView(camera: .campus,
                                    lots: PixelMapSampleData.lots,
-                                   highlightBuilding: CampusBuilding.match(location: "中正大樓 702"),
+                                   highlightBuilding: CampusBuilding.match(location: "中科大樓 702"),
                                    highlightText: "28 分",
                                    weather: .cloudy,
                                    onSelectLot: { selectedName = $0.name })

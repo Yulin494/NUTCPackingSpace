@@ -82,10 +82,10 @@ private struct CampusPainter {
     func paint() {
         paintGround()
         paintRoads()
+        paintPlaza()
         paintTrack()
         paintZones()
-        CampusMapData.buildings.filter { $0.kind == .building }.forEach(paintBuilding)
-        CampusMapData.buildings.filter { $0.kind == .court }.forEach(paintCourt)
+        CampusMapData.buildings.filter { $0.kind == .building || $0.kind == .outside }.forEach(paintBuilding)
         CampusMapData.buildings.filter { $0.kind == .gate }.forEach(paintGate)
         paintTrees()
     }
@@ -112,10 +112,39 @@ private struct CampusPainter {
         guard let track = CampusMapData.buildings.first(where: { $0.kind == .track }) else { return }
         let outer = layout.rect(track.rects[0])
         blob(outer, cut: 2 * c, inflate: u, color: PixelPalette.ink)
-        blob(outer, cut: 2 * c, color: dimmed ? PixelPalette.paper2 : PixelPalette.tan)
+        // 紅色跑道、綠色場地（停車鏡頭淡化為單色）
+        blob(outer, cut: 2 * c, color: dimmed ? PixelPalette.paper2 : track.roof)
         let infield = layout.rect(CampusMapData.trackInfield)
         blob(infield, cut: 2 * c, inflate: u, color: PixelPalette.ink)
-        blob(infield, cut: 2 * c, color: dimmed ? PixelPalette.paper : PixelPalette.grassD)
+        blob(infield, cut: 2 * c, color: dimmed ? PixelPalette.paper : PixelPalette.grass)
+    }
+
+    /// 花園廣場：鋪面（淡色方磚交錯）＋噴水池＋弘業樓旁水池
+    private func paintPlaza() {
+        let plaza = layout.rect(CampusMapData.plaza)
+        fill(plaza.insetBy(dx: -u, dy: -u), PixelPalette.ink)
+        fill(plaza, PixelPalette.paper)
+        if !dimmed {
+            let tile = 2 * c
+            let cols = Int((plaza.width / tile).rounded(.down))
+            let rows = Int((plaza.height / tile).rounded(.down))
+            for j in 0..<rows {
+                for i in 0..<cols where (i + j) % 2 == 0 {
+                    fill(CGRect(x: plaza.minX + CGFloat(i) * tile, y: plaza.minY + CGFloat(j) * tile,
+                                width: tile, height: tile), PixelPalette.paper2)
+                }
+            }
+        }
+        let center = layout.point(CampusMapData.fountainAt)
+        let pool = CGRect(x: center.x - 3 * c, y: center.y - 3 * c, width: 6 * c, height: 6 * c)
+        blob(pool, cut: c, inflate: u, color: PixelPalette.ink)
+        blob(pool, cut: c, color: dimmed ? PixelPalette.paper2 : PixelPalette.water)
+        fill(CGRect(x: center.x - c, y: center.y - c, width: 2 * c, height: 2 * c), PixelPalette.paper)
+        for pond in CampusMapData.ponds {
+            let r = layout.rect(pond)
+            fill(r.insetBy(dx: -u, dy: -u), PixelPalette.ink)
+            fill(r, dimmed ? PixelPalette.paper2 : PixelPalette.water)
+        }
     }
 
     private func paintZones() {
@@ -180,7 +209,8 @@ private struct CampusPainter {
     private func paintBuilding(_ b: CampusBuilding) {
         let rects = b.rects.map(layout.rect)
         for r in rects { fill(r.insetBy(dx: -u, dy: -u), PixelPalette.ink) }
-        let roofColor = dimmed ? PixelPalette.paper2 : b.roof
+        // 校外建築（太平國小）一律淡色，不搶校內建築的視覺
+        let roofColor = (dimmed || b.kind == .outside) ? PixelPalette.paper2 : b.roof
         for r in rects { fill(r, roofColor) }
 
         // 斜條紋屋頂（體育館）：橘色直條紋
@@ -210,14 +240,6 @@ private struct CampusPainter {
                 }
             }
         }
-    }
-
-    private func paintCourt(_ b: CampusBuilding) {
-        let r = layout.rect(b.rects[0])
-        fill(r.insetBy(dx: -u, dy: -u), PixelPalette.ink)
-        fill(r, dimmed ? PixelPalette.paper : PixelPalette.paper)
-        fill(r.insetBy(dx: u, dy: u), dimmed ? PixelPalette.paper2 : PixelPalette.tan)
-        fill(CGRect(x: layout.snap(r.midX - u / 2), y: r.minY + u, width: u, height: r.height - 2 * u), PixelPalette.paper)
     }
 
     private func paintGate(_ b: CampusBuilding) {
@@ -353,7 +375,7 @@ struct PixelCampusMapView: View {
 
     private func plates(_ layout: MapLayout) -> some View {
         ZStack(alignment: .topLeading) {
-            ForEach(CampusMapData.buildings.filter { $0.kind != .court && $0.plateVisible }) { b in
+            ForEach(CampusMapData.buildings.filter { $0.plateVisible }) { b in
                 NamePlate(text: b.plate)
                     .fixedSize()
                     .position(layout.point(b.plateAt))
@@ -403,7 +425,9 @@ struct PixelCampusMapView: View {
     private func markers(_ layout: MapLayout) -> some View {
         ZStack(alignment: .topLeading) {
             ForEach(lots) { lot in
-                if let zone = CampusMapData.zone(for: lot) {
+                // 汽車標記只在停車鏡頭畫；機車標記兩種鏡頭都畫
+                if let zone = CampusMapData.zone(for: lot),
+                   camera == .parking || zone.vehicle == .motorcycle {
                     LotMarker(lot: lot, zone: zone, expanded: camera == .parking) {
                         onSelectLot(lot)
                     }
@@ -451,14 +475,15 @@ struct PixelCampusMapView: View {
     /// 地圖上已被占用的矩形：建築名牌與（首頁鏡頭的）停車標記
     private func occupiedRects(_ layout: MapLayout) -> [CGRect] {
         var rects: [CGRect] = []
-        for b in CampusMapData.buildings where b.kind != .court && b.plateVisible {
+        for b in CampusMapData.buildings where b.plateVisible {
             let size = plateSize(b.plate)
             let c = layout.point(b.plateAt)
             rects.append(CGRect(x: c.x - size.width / 2, y: c.y - size.height / 2,
                                 width: size.width, height: size.height))
         }
         for lot in lots {
-            guard let zone = CampusMapData.zone(for: lot) else { continue }
+            guard let zone = CampusMapData.zone(for: lot),
+                  camera == .parking || zone.vehicle == .motorcycle else { continue }
             let c = markerCenter(zone, layout)
             rects.append(CGRect(x: c.x - 30, y: c.y - 22, width: 60, height: 44))
         }
@@ -466,7 +491,7 @@ struct PixelCampusMapView: View {
     }
 
     private func markerCenter(_ zone: CampusParkingZone, _ layout: MapLayout) -> CGPoint {
-        let p = layout.point(zone.markerAt)
+        let p = layout.point(camera == .parking ? (zone.parkingMarkerAt ?? zone.markerAt) : zone.markerAt)
         // 展開版標記較高，避免被地圖下緣裁切
         // 左右也夾在地圖內，避免標記被裁切
         let half: CGFloat = camera == .parking ? 48 : 30
@@ -572,7 +597,7 @@ private struct LotMarker: View {
         }
         .buttonStyle(LotMarkerButtonStyle(
             fill: expanded ? PixelPalette.paper : status.fill))
-        .accessibilityLabel("\(zone.name)機車停車場，剩餘 \(lot.availableCount) 位，\(status.label)")
+        .accessibilityLabel("\(zone.name)\(zone.vehicle == .car ? "汽車" : "機車")停車場，剩餘 \(lot.availableCount) 位，\(status.label)")
         .accessibilityHint("查看停車場詳情")
     }
 }
@@ -587,20 +612,23 @@ enum PixelMapSampleData {
                    lastUpdated: Date(), type: type)
     }
 
-    /// 假資料：三種狀態各一，外加兩個對不到地圖的名稱
+    /// 假資料：機車四處、汽車三處，外加一個對不到地圖的名稱
     static let lots: [ParkingLot] = [
         lot("資訊館", total: 177, available: 58),
         lot("錦平街", total: 515, available: 7),
         lot("中技大樓", total: 449, available: 0),
         lot("中科平面", total: 120, available: 40),
         lot("中商停車場", total: 90, available: 12, type: .car),
+        lot("中技停車場", total: 60, available: 25, type: .car),
+        lot("中科停車場", total: 80, available: 0, type: .car),
+        lot("未知停車場", total: 30, available: 5),   // 對不到地圖：安全略過
     ]
 }
 
 #Preview("校園鏡頭") {
     PixelCampusMapView(camera: .campus,
                        lots: PixelMapSampleData.lots,
-                       highlightBuilding: CampusBuilding.match(location: "中正大樓 702"),
+                       highlightBuilding: CampusBuilding.match(location: "中科大樓 702"),
                        highlightText: "28 分",
                        weather: .cloudy)
         .padding(.vertical, 24)

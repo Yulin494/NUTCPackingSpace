@@ -12,6 +12,7 @@ import UserNotifications
 @main
 struct NUTCParkingSpaceApp: App {
     @AppStorage("hasShownOnboarding") var hasShownOnboarding: Bool = false
+    @AppStorage("appearanceStyle") var appearanceStyle: AppearanceStyle = .standard
 
     let modelContainer: ModelContainer
 
@@ -52,6 +53,7 @@ struct NUTCParkingSpaceApp: App {
                     OnboardingView(hasShownOnboarding: $hasShownOnboarding)
                 }
             }
+            .environment(\.appearanceStyle, appearanceStyle)
             // 只在使用者看完 onboarding、進入主畫面後才申請通知權限，
             // 避免在教學第一頁就跳出無情境的系統權限彈窗。
             .onChange(of: hasShownOnboarding) { _, shown in
@@ -60,6 +62,9 @@ struct NUTCParkingSpaceApp: App {
             .onAppear {
                 if hasShownOnboarding { requestNotificationPermission() }
             }
+            #if DEBUG
+            .modifier(PixelMapGalleryRoot())
+            #endif
         }
         .modelContainer(modelContainer)
     }
@@ -70,3 +75,16 @@ struct NUTCParkingSpaceApp: App {
         }
     }
 }
+
+#if DEBUG
+/// DEBUG 專用：啟動參數含 `-PixelMapGallery YES` 時，根畫面改顯示像素地圖檢視
+private struct PixelMapGalleryRoot: ViewModifier {
+    func body(content: Content) -> some View {
+        if UserDefaults.standard.bool(forKey: "PixelMapGallery") {
+            PixelMapGalleryView()
+        } else {
+            content
+        }
+    }
+}
+#endif

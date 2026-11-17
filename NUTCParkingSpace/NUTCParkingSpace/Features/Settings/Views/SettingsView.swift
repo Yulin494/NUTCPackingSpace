@@ -6,6 +6,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Query(sort: \HomeworkItem.dueDate) private var homeworks: [HomeworkItem]
 
+    @AppStorage("appearanceStyle")             var appearanceStyle: AppearanceStyle = .standard
     @AppStorage("hasShownOnboarding")         var hasShownOnboarding: Bool = false
     @AppStorage("isMonitoringEnabled")         var isMonitoringEnabled: Bool = true
     @AppStorage("courseNotificationsEnabled")  var courseNotificationsEnabled: Bool = true
@@ -17,6 +18,15 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                // MARK: 外觀
+                Section(header: Text("外觀")) {
+                    Picker("風格", selection: $appearanceStyle) {
+                        ForEach(AppearanceStyle.allCases) { style in
+                            Text(style.title).tag(style)
+                        }
+                    }
+                }
+
                 // MARK: 停車通知
                 Section(header: Text("停車通知")) {
                     Toggle("接近校園自動通知", isOn: $isMonitoringEnabled)
@@ -69,6 +79,9 @@ struct SettingsView: View {
                         Spacer()
                         Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")
                             .foregroundColor(.secondary)
+                    }
+                    NavigationLink("開放原始碼授權") {
+                        FontLicenseView()
                     }
                 }
             }

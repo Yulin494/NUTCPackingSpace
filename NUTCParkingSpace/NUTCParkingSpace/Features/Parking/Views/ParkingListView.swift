@@ -6,8 +6,18 @@ struct ParkingListView: View {
     // 控制設定頁面的顯示狀態
     @State private var showSettings = false
     @State private var showMap = false
+    @Environment(\.appearanceStyle) private var appearanceStyle
 
+    // 依外觀風格分支：像素模式改用像素版，標準模式走原本畫面
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelParkingView(viewModel: viewModel)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             List {
                 // 追蹤中橫幅（可停止）

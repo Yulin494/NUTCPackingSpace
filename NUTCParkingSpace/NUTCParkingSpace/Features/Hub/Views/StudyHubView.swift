@@ -30,7 +30,17 @@ struct StudyHubView: View {
         (15, 10), (16, 10), (17, 10), (18, 10), (19, 10), (20, 10), (21, 10)
     ]
 
+    @Environment(\.appearanceStyle) private var appearanceStyle
+
     var body: some View {
+        if appearanceStyle == .pixel {
+            PixelStudyHubView(courses: courses, homeworks: homeworks, examDays: nextExamDays)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {

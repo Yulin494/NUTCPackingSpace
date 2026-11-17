@@ -9,6 +9,7 @@ struct HomeView: View {
     @Query(sort: \HomeworkItem.dueDate) var homeworks: [HomeworkItem]
     @State private var weather: SharedWeatherData? = SharedWeatherCache.load()
     @State private var parkingLots: [ParkingLotData] = SharedParkingCache.load() ?? []
+    @Environment(\.appearanceStyle) private var appearanceStyle
 
     private let periodTimes: [(Int, Int)] = [
         (8, 10), (9, 10), (10, 10), (11, 10), (12, 10), (13, 10), (14, 10),
@@ -41,6 +42,22 @@ struct HomeView: View {
     }
 
     var body: some View {
+        if appearanceStyle == .pixel {
+            // 像素模式：沿用同一份資料與刷新動作，畫面由 PixelHomeView 負責
+            PixelHomeView(
+                courses: courses,
+                todayCourses: todayCourses,
+                pendingHomework: pendingHomework,
+                weather: weather,
+                parkingLots: parkingLots,
+                periodTimes: periodTimes,
+                refresh: refresh)
+        } else {
+            standardBody
+        }
+    }
+
+    private var standardBody: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
